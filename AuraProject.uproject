@@ -1,13 +1,16 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{00000000-0000-0000-0000-000000000000}",
+	"EngineAssociation": "00000000-0000-0000-0000-000000000000",
 	"Category": "",
 	"Description": "",
 	"Modules": [
 		{
 			"Name": "AuraProject",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
 		}
 	],
 	"Plugins": [
