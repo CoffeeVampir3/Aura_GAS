@@ -16,6 +16,7 @@ class AURAPROJECT_API AAuraPlayerController : public APlayerController
 	
 public:
 	AAuraPlayerController();
+	virtual void PlayerTick(float DeltaTime) override;
 
 protected:
 	
@@ -30,4 +31,8 @@ private:
 	TObjectPtr<class UInputAction> MoveAction;
 
 	void Move(const struct FInputActionValue& InputActionValue);
+
+	void CursorTrace();
+	class IInteractable* LastInteractable;
+	class IInteractable* CurrentInteractable;
 };
