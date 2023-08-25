@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class IInteractable;
 /**
  * 
  */
@@ -33,6 +34,6 @@ private:
 	void Move(const struct FInputActionValue& InputActionValue);
 
 	void CursorTrace();
-	class IInteractable* LastInteractable;
-	class IInteractable* CurrentInteractable;
+	TObjectPtr<IInteractable> LastInteractable;
+	TObjectPtr<IInteractable> CurrentInteractable;
 };
