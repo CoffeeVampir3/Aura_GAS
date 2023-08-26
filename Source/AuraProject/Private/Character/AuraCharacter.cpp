@@ -4,6 +4,7 @@
 #include "Character/AuraCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
@@ -40,12 +41,15 @@ void AAuraCharacter::OnRep_PlayerState()
 
 void AAuraCharacter::InitializeAbilityActorInfo()
 {
+	Super::InitializeAbilityActorInfo();
+	
 	auto AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
-	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this);
-	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+	AbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(AuraPlayerState->GetAbilitySystemComponent());;
+	
+	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
+	AbilitySystemComponent->AbilityActorInfoSet();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
-
 	
 	if (auto AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{

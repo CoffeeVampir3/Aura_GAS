@@ -4,43 +4,59 @@
 #include "Actor/AuraEffectActor.h"
 
 #include "AbilitySystemComponent.h"
-#include "AbilitySystemInterface.h"
-#include "AbilitySystem/AuraAttributeSet.h"
-#include "Components/SphereComponent.h"
+#include "AbilitySystemGlobals.h"
 
 AAuraEffectActor::AAuraEffectActor(): AActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
-
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-	SetRootComponent(Mesh);
-	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
-	Sphere->SetupAttachment(GetRootComponent());
-}
-
-void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if(const IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor))
-	{
-		const auto AttributeSet = ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UAuraAttributeSet::StaticClass());
-		const auto AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
-
-		auto DontDoThis = const_cast<UAuraAttributeSet*>(AuraAttributeSet);
-		DontDoThis->SetHealth(DontDoThis->GetHealth() + 50.0f);
-		Destroy();
-	}
-}
-
-void AAuraEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
+	
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
 }
 
 void AAuraEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
+	
+}
 
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraEffectActor::OnOverlap);
-	Sphere->OnComponentEndOverlap.AddDynamic(this, &AAuraEffectActor::EndOverlap);
+void AAuraEffectActor::ApplyEffectToTarget(AActor* EffectTarget, TSubclassOf<UGameplayEffect> GameplayEffectClass,
+	bool StoreEffectApplication)
+{
+	const auto TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(EffectTarget);
+	if(!TargetASC) return;
+
+	check(GameplayEffectClass);
+	auto ContextHandle = TargetASC->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	const auto EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, ActorLevel, ContextHandle);
+	auto ActiveEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+	
+	if(!StoreEffectApplication) return;
+	
+	auto& [GameplayEffectMap] = ActiveAppliedInfiniteEffectHandles.FindOrAdd(TargetASC);
+	GameplayEffectMap.Add(GameplayEffectClass, ActiveEffectHandle);
+}
+
+void AAuraEffectActor::RemoveStoredEffectFromTarget(AActor* EffectTarget,
+	TSubclassOf<UGameplayEffect> GameplayEffectClass, int Stacks)
+{
+	const auto TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(EffectTarget);
+	if(!TargetASC) return;
+
+	check(GameplayEffectClass);
+
+	if (auto TargetEffectMap = ActiveAppliedInfiniteEffectHandles.Find(TargetASC))
+	{
+		auto ActiveEffectHandle = TargetEffectMap->GameplayEffectMap.FindAndRemoveChecked(GameplayEffectClass);
+		if(ActiveEffectHandle.IsValid())
+		{
+			TargetASC->RemoveActiveGameplayEffect(ActiveEffectHandle, Stacks);
+			return;
+		}
+	}
+
+	//The target had a valid ASC but did not have a valid effect to remove, this is probably an error.
+	UE_LOG(LogTemp, Error,
+		TEXT("Attempted to remove an effect from Actor: %s, GameplayEffectClass: %s but the actor did not have that effect."), 
+		*EffectTarget->GetName(), *GameplayEffectClass->GetName());
 }

@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "AuraCharacterBase.generated.h"
+
+class UAuraAbilitySystemComponent;
 
 UCLASS(Abstract)
 class AURAPROJECT_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -14,7 +17,7 @@ class AURAPROJECT_API AAuraCharacterBase : public ACharacter, public IAbilitySys
 	
 public:
 	AAuraCharacterBase();
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override {return AbilitySystemComponent;}
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override {return Cast<UAbilitySystemComponent>(AbilitySystemComponent);}
 	class UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 protected:
@@ -24,8 +27,10 @@ protected:
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	UPROPERTY(EditAnywhere, Category="Abilities")
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	TObjectPtr<UAuraAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(EditAnywhere, Category="Abilities")
 	TObjectPtr<class UAttributeSet> AttributeSet;
+
+	virtual void InitializeAbilityActorInfo();
 };

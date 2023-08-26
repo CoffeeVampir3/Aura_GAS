@@ -3,8 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "GameFramework/Actor.h"
 #include "AuraEffectActor.generated.h"
+
+class UAbilitySystemComponent;
+
+USTRUCT()
+struct FInnerMapStruct
+{
+	GENERATED_BODY()
+
+	TMap<TSubclassOf<UGameplayEffect>, FActiveGameplayEffectHandle> GameplayEffectMap;
+};
 
 UCLASS()
 class AURAPROJECT_API AAuraEffectActor : public AActor
@@ -14,21 +25,18 @@ class AURAPROJECT_API AAuraEffectActor : public AActor
 public:	
 	AAuraEffectActor();
 
-	UFUNCTION()
-	virtual void OnOverlap(UPrimitiveComponent* OverlappedComponent,
-		AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
-		bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-	virtual void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
 protected:
 	virtual void BeginPlay() override;
 
-private:
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<class USphereComponent> Sphere;
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<class UStaticMeshComponent> Mesh;
+	UFUNCTION(BlueprintCallable, Category="GAS|Effects")
+	void ApplyEffectToTarget(AActor* EffectTarget, TSubclassOf<UGameplayEffect> GameplayEffectClass, bool StoreEffectApplication = false);
+
+	UFUNCTION(BlueprintCallable, Category="GAS|Effects")
+	void RemoveStoredEffectFromTarget(AActor* EffectTarget, TSubclassOf<UGameplayEffect> GameplayEffectClass, int Stacks=-1);
+
+	UPROPERTY()
+	TMap<UAbilitySystemComponent*, FInnerMapStruct> ActiveAppliedInfiniteEffectHandles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="GAS|Effects")
+	float ActorLevel = 1.f;
 };
