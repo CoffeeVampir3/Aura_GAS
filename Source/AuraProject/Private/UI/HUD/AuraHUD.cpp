@@ -5,30 +5,42 @@
 #include "UI/Widget/AuraUserWidget.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 
-
-UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetControllerParams& WidgetControllerParams)
-{
-	if (!OverlayWidgetController)
-	{
-		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
-		OverlayWidgetController->SetWidgetControllerParams(WidgetControllerParams);
-		OverlayWidgetController->BindAttributeCallbacks();
-	}
-	return OverlayWidgetController;
-}
-
-void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
+void AAuraHUD::InitOverlay(AAuraPlayerController* PC, AAuraPlayerState* PS, UAuraAbilitySystemComponent* ASC, UAuraAttributeSet* AS)
 {
 	checkf(OverlayWidgetClass, TEXT("Overlay widget class was not set in the HUD class you dumb fuck."));
-	checkf(OverlayWidgetControllerClass, TEXT("Overlay widget controller class was not set in the HUD class you dumb fuck."));
-	
-	const auto Widget = CreateWidget<UUserWidget>(GetWorld(), OverlayWidgetClass.Get());
-	OverlayWidget = Cast<UAuraUserWidget>(Widget);
-	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
-	auto WidgetController = GetOverlayWidgetController(WidgetControllerParams);
-	OverlayWidget->SetWidgetController(WidgetController);
 
-	WidgetController->BroadcastInitialValues();
+	OverlayWidget = CreateWidget<UAuraUserWidget>(GetWorld(), OverlayWidgetClass.Get());
+	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
+
+	for(auto ControllerClass : DefaultControllersToConstruct)
+	{
+		auto ConstructedController = ConstructWidgetController(ControllerClass);
+		check(ConstructedController);
+		
+		ConstructedController->SetWidgetControllerParams(WidgetControllerParams);
+		ConstructedController->BindCallbacks();
+		ConstructedController->BroadcastInitialValues();
+	}
 	
-	Widget->AddToViewport();
+	OverlayWidget->AddToViewport();
+}
+
+void AAuraHUD::GetWidgetController(const TSubclassOf<UWidgetController> ControllerClass, UWidgetController*& OutputController)
+{
+	if(const auto Controller = ConstructedControllers.Find(ControllerClass))
+	{
+		OutputController = *Controller;
+		return;
+	}
+
+	//This actually is an error
+	const FString DisplayName = ControllerClass->GetDisplayNameText().ToString();
+	UE_LOG(LogTemp, Warning, TEXT("Constructed a widget controller of type: %s"), *DisplayName);
+}
+
+UWidgetController* AAuraHUD::ConstructWidgetController(TSubclassOf<UWidgetController> ControllerClass)
+{
+	UWidgetController* NewController = NewObject<UWidgetController>(this, ControllerClass);
+	ConstructedControllers.Add(ControllerClass, NewController);
+	return NewController;
 }

@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAttributeSet.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
@@ -49,7 +50,7 @@ void AAuraCharacter::InitializeAbilityActorInfo()
 	
 	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
 	AbilitySystemComponent->AbilityActorInfoSet();
-	AttributeSet = AuraPlayerState->GetAttributeSet();
+	AttributeSet = Cast<UAuraAttributeSet>(AuraPlayerState->GetAttributeSet());
 	
 	if (auto AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{
@@ -58,4 +59,7 @@ void AAuraCharacter::InitializeAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
+
+	//This technically only needs to be called on the server, so we're sort of setting this twice. Not a real issue, just a note.
+	InitializeDefaultEffects();
 }

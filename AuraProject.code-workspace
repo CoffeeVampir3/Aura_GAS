@@ -6,11 +6,12 @@
 		},
 		{
 			"name": "UE5",
-			"path": "/mnt/ue/UnrealEngine"
+			"path": "/mnt/ue/5.3/UnrealEngine"
 		}
 	],
 	"settings": {
-		"typescript.tsc.autoDetect": "off"
+		"typescript.tsc.autoDetect": "off",
+		"npm.autoDetect": "off"
 	},
 	"extensions": {
 		"recommendations": [
@@ -19,6 +20,849 @@
 			"vadimcn.vscode-lldb",
 			"ms-vscode.mono-debug",
 			"dfarley1.file-picker"
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "AuraProject Linux Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Debug",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Debug",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProject Linux Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Debug",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"DebugGame",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"DebugGame",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProject Linux DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"DebugGame",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Development",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Development",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProject Linux Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Development",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Test Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Test",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Test Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Test",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProject Linux Test Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Test Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Test",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Shipping Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Shipping",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Shipping Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Shipping",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProject Linux Shipping Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject Linux Shipping Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"Linux",
+					"Shipping",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Debug",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Debug",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProject LinuxArm64 Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Debug",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"DebugGame",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"DebugGame",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProject LinuxArm64 DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"DebugGame",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Development",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Development",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProject LinuxArm64 Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Development",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Test Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Test",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Test Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Test",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProject LinuxArm64 Test Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Test Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Test",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Shipping Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Shipping",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Shipping Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Shipping",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProject LinuxArm64 Shipping Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProject LinuxArm64 Shipping Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProject",
+					"LinuxArm64",
+					"Shipping",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProjectEditor Linux Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProjectEditor",
+					"Linux",
+					"Debug",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProjectEditor Linux Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProjectEditor",
+					"Linux",
+					"Debug",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProjectEditor Linux Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProjectEditor Linux Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProjectEditor",
+					"Linux",
+					"Debug",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProjectEditor Linux DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProjectEditor",
+					"Linux",
+					"DebugGame",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProjectEditor Linux DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProjectEditor",
+					"Linux",
+					"DebugGame",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProjectEditor Linux DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProjectEditor Linux DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProjectEditor",
+					"Linux",
+					"DebugGame",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProjectEditor Linux Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProjectEditor",
+					"Linux",
+					"Development",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProjectEditor Linux Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProjectEditor",
+					"Linux",
+					"Development",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AuraProjectEditor Linux Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			},
+			{
+				"label": "AuraProjectEditor Linux Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"AuraProjectEditor",
+					"Linux",
+					"Development",
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/mnt/ue/5.3/UnrealEngine"
+				}
+			}
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Launch AuraProject (Debug)",
+				"request": "launch",
+				"program": "/mnt/ue/ue-projs/AuraProject/Binaries/Linux/AuraProject-Linux-Debug",
+				"preLaunchTask": "AuraProject Linux Debug Build",
+				"args": [
+				],
+				"cwd": "/mnt/ue/5.3/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/mnt/ue/5.3/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch AuraProject (DebugGame)",
+				"request": "launch",
+				"program": "/mnt/ue/ue-projs/AuraProject/Binaries/Linux/AuraProject-Linux-DebugGame",
+				"preLaunchTask": "AuraProject Linux DebugGame Build",
+				"args": [
+				],
+				"cwd": "/mnt/ue/5.3/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/mnt/ue/5.3/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch AuraProject (Development)",
+				"request": "launch",
+				"program": "/mnt/ue/ue-projs/AuraProject/Binaries/Linux/AuraProject",
+				"preLaunchTask": "AuraProject Linux Development Build",
+				"args": [
+				],
+				"cwd": "/mnt/ue/5.3/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/mnt/ue/5.3/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch AuraProject (Test)",
+				"request": "launch",
+				"program": "/mnt/ue/ue-projs/AuraProject/Binaries/Linux/AuraProject-Linux-Test",
+				"preLaunchTask": "AuraProject Linux Test Build",
+				"args": [
+				],
+				"cwd": "/mnt/ue/5.3/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/mnt/ue/5.3/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch AuraProject (Shipping)",
+				"request": "launch",
+				"program": "/mnt/ue/ue-projs/AuraProject/Binaries/Linux/AuraProject-Linux-Shipping",
+				"preLaunchTask": "AuraProject Linux Shipping Build",
+				"args": [
+				],
+				"cwd": "/mnt/ue/5.3/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/mnt/ue/5.3/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch AuraProjectEditor (Debug)",
+				"request": "launch",
+				"program": "/mnt/ue/5.3/UnrealEngine/Engine/Binaries/Linux/UnrealEditor-Linux-Debug",
+				"preLaunchTask": "AuraProjectEditor Linux Debug Build",
+				"args": [
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject"
+				],
+				"cwd": "/mnt/ue/5.3/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/mnt/ue/5.3/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch AuraProjectEditor (DebugGame)",
+				"request": "launch",
+				"program": "/mnt/ue/5.3/UnrealEngine/Engine/Binaries/Linux/UnrealEditor-Linux-DebugGame",
+				"preLaunchTask": "AuraProjectEditor Linux DebugGame Build",
+				"args": [
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject"
+				],
+				"cwd": "/mnt/ue/5.3/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/mnt/ue/5.3/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch AuraProjectEditor (Development)",
+				"request": "launch",
+				"program": "/mnt/ue/5.3/UnrealEngine/Engine/Binaries/Linux/UnrealEditor",
+				"preLaunchTask": "AuraProjectEditor Linux Development Build",
+				"args": [
+					"/mnt/ue/ue-projs/AuraProject/AuraProject.uproject"
+				],
+				"cwd": "/mnt/ue/5.3/UnrealEngine",
+				"type": "cppdbg",
+				"visualizerFile": "/mnt/ue/5.3/UnrealEngine/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Generate Project Files",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "UnrealBuildTool Linux Development Build",
+				"program": "/mnt/ue/5.3/UnrealEngine/Engine/Build/BatchFiles/RunUBT.bat",
+				"args": [
+					"-projectfiles",
+					"-vscode",
+					"-project=/mnt/ue/ue-projs/AuraProject/AuraProject.uproject",
+					"-game",
+					"-engine",
+					"-dotnet"
+				],
+				"console": "internalConsole",
+				"internalConsoleOptions": "openOnSessionStart",
+				"stopAtEntry": false,
+				"cwd": "/mnt/ue/5.3/UnrealEngine"
+			}
 		]
 	}
 }

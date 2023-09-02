@@ -6,19 +6,23 @@
 #include "AbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UAuraAttributeSet;
 class UAuraAbilitySystemComponent;
 
 UCLASS(Abstract)
-class AURAPROJECT_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface
+class AURAPROJECT_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 	
 public:
 	AAuraCharacterBase();
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override {return Cast<UAbilitySystemComponent>(AbilitySystemComponent);}
-	class UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+	FORCEINLINE virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override {return Cast<UAbilitySystemComponent>(AbilitySystemComponent);}
+	FORCEINLINE UAuraAttributeSet* GetAttributeSet() const { return AttributeSet; }
+
+	virtual int32 GetUnitLevel() override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -26,11 +30,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
-	UPROPERTY(EditAnywhere, Category="Abilities")
+	UPROPERTY(BlueprintReadOnly, Category="Abilities")
 	TObjectPtr<UAuraAbilitySystemComponent> AbilitySystemComponent;
 
-	UPROPERTY(EditAnywhere, Category="Abilities")
-	TObjectPtr<class UAttributeSet> AttributeSet;
+	UPROPERTY(BlueprintReadOnly, Category="Abilities")
+	TObjectPtr<UAuraAttributeSet> AttributeSet;
 
 	virtual void InitializeAbilityActorInfo();
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Effects")
+	TArray<TSubclassOf<UGameplayEffect>> InitialGameplayEffects;
+	
+	void InitializeDefaultEffects() const;
 };

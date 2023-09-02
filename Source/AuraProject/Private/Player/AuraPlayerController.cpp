@@ -6,7 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "Interaction/Interactable.h"
 
-AAuraPlayerController::AAuraPlayerController(): APlayerController()
+AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
 }
@@ -73,11 +73,11 @@ void AAuraPlayerController::CursorTrace()
 	CurrentInteractable = Cast<IInteractable>(CursorHit.GetActor());
 
 	if(LastInteractable == CurrentInteractable) return;
-	if(CurrentInteractable)
+	if(CurrentInteractable.IsValid())
 	{
 		CurrentInteractable->Highlight();
 	}
-	if(LastInteractable)
+	if(LastInteractable.IsValid())
 	{
 		LastInteractable->UnHighlight();
 	}

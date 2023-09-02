@@ -3,25 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "CommonUserWidget.h"
 #include "AuraUserWidget.generated.h"
 
+class AAuraHUD;
+class UWidgetController;
 /**
  * 
  */
 UCLASS()
-class AURAPROJECT_API UAuraUserWidget : public UUserWidget
+class AURAPROJECT_API UAuraUserWidget : public UCommonUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	UFUNCTION(BlueprintCallable)
-	void SetWidgetController(UObject* InWidgetController);
-	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="CATEGORY")
-	TObjectPtr<UObject> WidgetController;
-
-protected:
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnWidgetControllerSet();
 };

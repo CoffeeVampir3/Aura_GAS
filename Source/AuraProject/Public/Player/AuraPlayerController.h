@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "UObject/WeakInterfacePtr.h"
 #include "AuraPlayerController.generated.h"
 
 class IInteractable;
@@ -20,7 +21,6 @@ public:
 	virtual void PlayerTick(float DeltaTime) override;
 
 protected:
-	
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
@@ -34,6 +34,6 @@ private:
 	void Move(const struct FInputActionValue& InputActionValue);
 
 	void CursorTrace();
-	TObjectPtr<IInteractable> LastInteractable;
-	TObjectPtr<IInteractable> CurrentInteractable;
+	TWeakInterfacePtr<IInteractable> LastInteractable;
+	TWeakInterfacePtr<IInteractable> CurrentInteractable;
 };
