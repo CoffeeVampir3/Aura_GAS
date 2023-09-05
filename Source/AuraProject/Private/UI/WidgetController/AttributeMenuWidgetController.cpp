@@ -2,15 +2,11 @@
 
 
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
-
-#include "AuraGameplayTags.h"
 #include "AbilitySystem/Data/GameAttributeInfo.h"
-
 
 void UAttributeMenuWidgetController::BindCallbacks()
 {
 	Super::BindCallbacks();
-
 	
 }
 
@@ -20,17 +16,29 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 
 	check(GameAttributeInfo);
 
-	FGameplayAttributeInfo AttributeInfo;
-	if(bool IsInfoValid = GameAttributeInfo->TryGetTagInfo(TAGS::ATTRIBUTES::SECONDARY::Armor, AttributeInfo); !IsInfoValid)
-	{
-		UE_LOG(LogTemp,
-			Error,
-			TEXT("Attempted to retrieve value for attribute %s in GameAttributeInfo, but it was not available."),
-			*TAGS::ATTRIBUTES::SECONDARY::Armor.NAME_NativeGameplayTag.ToString()
-			);
-		return;
-	}
+	TArray<FGameplayAttribute> Attributes;
+	AbilitySystemComponent->GetAllAttributes(Attributes);
 
-	AttributeInfo.AttributeValue = AttributeSet->GetArmor();
-	AttributeInfoDelegate.Broadcast(AttributeInfo);
+	for (auto Attribute : Attributes)
+	{
+		FGameplayAttributeInfo AttributeInfo;
+		if(bool IsInfoValid = GameAttributeInfo->TryGetTagInfoFromAttribute(Attribute, AttributeInfo); !IsInfoValid)
+		{
+			UE_LOG(LogTemp,
+				Error,
+				TEXT("Attempted to retrieve value for attribute %s in GameAttributeInfo, but it was not available."),
+				*Attribute.GetName()
+				);
+			continue;
+		}
+
+		bool bFoundAttribute = false;
+		float Value = AbilitySystemComponent->GetGameplayAttributeValue(AttributeInfo.BindingGameplayAttribute, bFoundAttribute);
+		if(!bFoundAttribute)
+		{
+			continue;
+		}
+		AttributeInfo.AttributeValue = Value;
+		AttributeInfoDelegate.Broadcast(AttributeInfo);
+	}
 }

@@ -30,6 +30,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 
 	//Initialize for Server
 	InitializeAbilityActorInfo();
+	AddCharacterAbilities();
 }
 
 void AAuraCharacter::OnRep_PlayerState()
@@ -38,6 +39,11 @@ void AAuraCharacter::OnRep_PlayerState()
 
 	//Initialize for Client
 	InitializeAbilityActorInfo();
+}
+
+FVector AAuraCharacter::GetCombatSocketLocation()
+{
+	return Weapon->GetSocketLocation(WeaponTipSocketName);
 }
 
 void AAuraCharacter::InitializeAbilityActorInfo()
@@ -61,5 +67,18 @@ void AAuraCharacter::InitializeAbilityActorInfo()
 	}
 
 	//This technically only needs to be called on the server, so we're sort of setting this twice. Not a real issue, just a note.
-	InitializeDefaultEffects();
+	if (!IsValid(GetAbilitySystemComponent()) or InitialGameplayEffects.Num() == 0)
+	{
+		return;
+	}
+
+	const auto AuraASC = GetAbilitySystemComponent();
+	auto EffectContext = AuraASC->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+
+	for (const auto Effect : InitialGameplayEffects)
+	{
+		const auto EffectSpecHandle = AuraASC->MakeOutgoingSpec(Effect, 1.0, EffectContext);
+		GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+	}
 }

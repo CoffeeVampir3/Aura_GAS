@@ -22,8 +22,6 @@ class AURAPROJECT_API UAttributeMenuWidgetController : public UWidgetController
 	
 public:
 	virtual void BindCallbacks() override;
-
-	UFUNCTION(BlueprintCallable)
 	virtual void BroadcastInitialValues() override;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attribute|Delegate")

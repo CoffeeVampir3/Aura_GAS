@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AttributeSet.h"
 #include "GameplayTagContainer.h"
 #include "Engine/DataAsset.h"
 #include "GameAttributeInfo.generated.h"
@@ -12,8 +13,11 @@ struct FGameplayAttributeInfo
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag AttributeTag = FGameplayTag();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayAttribute BindingGameplayAttribute = FGameplayAttribute();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText AttributeName = FText();
@@ -34,10 +38,23 @@ class AURAPROJECT_API UGameAttributeInfo : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	void BuildMaps();
+	
 	UFUNCTION(BlueprintCallable, Category = "Attribute Info", meta=(ExpandBoolAsExecs="ReturnValue"))
 	bool TryGetTagInfo(const FGameplayTag& AttributeTag, FGameplayAttributeInfo& OutAttributeInfo);
 
+	UFUNCTION(BlueprintCallable, Category = "Attribute Info", meta=(ExpandBoolAsExecs="ReturnValue"))
+	bool TryGetTagInfoFromAttribute(const FGameplayAttribute& Attribute, FGameplayAttributeInfo& OutAttributeInfo);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TMap<FGameplayTag, FGameplayAttributeInfo> AttributeInformation;
+	TArray<FGameplayAttributeInfo> AttributeInformation;
+
+	bool bMapsBuilt = false;
+
+	UPROPERTY()
+	TMap<FGameplayTag, FGameplayAttributeInfo> TagToAttributeInfo;
+
+	UPROPERTY()
+	TMap<FGameplayAttribute, FGameplayAttributeInfo> AttributeToAttributeInfo;
 };

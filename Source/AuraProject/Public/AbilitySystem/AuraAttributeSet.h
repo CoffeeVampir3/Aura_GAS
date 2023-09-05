@@ -54,6 +54,14 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	/*
+	 * Meta -- NOT Replicated, client local only.
+	 */
+
+	UPROPERTY(BlueprintReadOnly, Category="Meta Attribute")
+	FGameplayAttributeData MetaIncomingDamage;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MetaIncomingDamage);
+
+	/*
 	 *	Growth
 	 */
 

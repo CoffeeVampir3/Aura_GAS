@@ -13,7 +13,7 @@
 class UWidgetController;
 class UAttributeSet;
 class UAbilitySystemComponent;
-class UOverlayWidgetController;
+class UAuraUserWidget;
 struct FWidgetControllerParams;
 /**
  * 
@@ -25,22 +25,14 @@ class AURAPROJECT_API AAuraHUD : public AHUD
 
 public:
 	void InitOverlay(AAuraPlayerController* PC, AAuraPlayerState* PS, UAuraAbilitySystemComponent* ASC, UAuraAttributeSet* AS);
-
-	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType="ControllerClass", DynamicOutputParam="OutputController"))
-	void GetWidgetController(TSubclassOf<UWidgetController> ControllerClass, UWidgetController*& OutputController);
-
-	UWidgetController* ConstructWidgetController(TSubclassOf<UWidgetController> ControllerClass);
 	
 private:
 	UPROPERTY()
-	TObjectPtr<class UAuraUserWidget> OverlayWidget;
+	TObjectPtr<UAuraUserWidget> OverlayWidget;
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAuraUserWidget> OverlayWidgetClass;
-
+	
 	UPROPERTY(EditDefaultsOnly)
-	TArray<TSubclassOf<UWidgetController>> DefaultControllersToConstruct;
-
-	UPROPERTY()
-	TMap<TSubclassOf<UWidgetController>, UWidgetController*> ConstructedControllers;
+	TArray<TSubclassOf<UObject>> DefaultControllersToConstruct;
 };

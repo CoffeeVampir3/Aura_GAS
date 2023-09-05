@@ -4,6 +4,22 @@
 #include "AuraGameplayTags.h"
 #include "NativeGameplayTags.h"
 
+namespace TAGS::DATA {
+ UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage, "Data.Damage", "How much raw damage to deal.")
+}
+
+namespace TAGS::INPUT
+{
+ UE_DEFINE_GAMEPLAY_TAG(LeftMouseButton, "Input.LeftMouseButton")
+ UE_DEFINE_GAMEPLAY_TAG(RightMouseButton, "Input.RightMouseButton")
+ UE_DEFINE_GAMEPLAY_TAG(MiddleMouseButton, "Input.MiddleMouseButton")
+ 
+ UE_DEFINE_GAMEPLAY_TAG(Key1, "Input.Keyboard1")
+ UE_DEFINE_GAMEPLAY_TAG(Key2, "Input.Keyboard2")
+ UE_DEFINE_GAMEPLAY_TAG(Key3, "Input.Keyboard3")
+ UE_DEFINE_GAMEPLAY_TAG(Key4, "Input.Keyboard4")
+}
+
 namespace TAGS::ATTRIBUTES
 {
  namespace PRIMARY

@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "UIFunctionLibrary.generated.h"
 
+class UWidgetControllerSubsystem;
 class AAuraHUD;
 /**
  * 
@@ -16,5 +17,5 @@ class AURAPROJECT_API UUIFunctionLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "GAS|UI|Hud|Player Interface", BlueprintPure)
-	static AAuraHUD* GetAuraHud(UObject* WorldContextObject);
+	static UWidgetControllerSubsystem* GetWidgetControllerSubsystem(UObject* WorldContextObject);
 };

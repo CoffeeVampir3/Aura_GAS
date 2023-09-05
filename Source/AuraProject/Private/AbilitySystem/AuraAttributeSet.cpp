@@ -70,7 +70,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 {
 	Super::PostGameplayEffectExecute(Data);
 
-	auto EffectProperties = MakeEffectProperties(Data);
+	//auto EffectProperties = MakeEffectProperties(Data);
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
@@ -80,6 +80,20 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+		return;
+	}
+
+	if (Data.EvaluatedData.Attribute == GetMetaIncomingDamageAttribute())
+	{
+		const float LocalIncomingDamage = GetMetaIncomingDamage();
+		SetMetaIncomingDamage(0.f);
+
+		if(LocalIncomingDamage != 0.f)
+		{
+			const float NewHealth = GetHealth() - LocalIncomingDamage;
+			const bool bFatal = NewHealth <= 0.f;
+			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
+		}
 		return;
 	}
 }
