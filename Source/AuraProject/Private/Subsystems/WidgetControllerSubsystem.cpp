@@ -24,3 +24,8 @@ void UWidgetControllerSubsystem::ConstructWidgetController(const TSubclassOf<UOb
 
 	OutputController = NewController;
 }
+
+bool UWidgetControllerSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
+}

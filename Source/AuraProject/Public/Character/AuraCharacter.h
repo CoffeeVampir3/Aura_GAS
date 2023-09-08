@@ -23,10 +23,7 @@ public:
 
 protected:
 	virtual void InitializeAbilityActorInfo() override;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Effects")
-	TArray<TSubclassOf<UGameplayEffect>> InitialGameplayEffects;
-
+	
 	UPROPERTY(EditAnywhere, Category="Combat")
 	FName WeaponTipSocketName;
 };

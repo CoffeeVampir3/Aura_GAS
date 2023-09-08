@@ -54,7 +54,7 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	/*
-	 * Meta -- NOT Replicated, client local only.
+	 * Meta -- NOT Replicated, these are useful only for the server.
 	 */
 
 	UPROPERTY(BlueprintReadOnly, Category="Meta Attribute")

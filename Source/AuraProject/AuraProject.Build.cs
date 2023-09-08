@@ -7,6 +7,11 @@ public class AuraProject : ModuleRules
 	public AuraProject(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		
+		DefaultBuildSettings = BuildSettingsVersion.Latest;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
+		CppStandard = CppStandardVersion.Latest;
+		CStandard = CStandardVersion.Latest;
 	
 		PublicDependencyModuleNames.AddRange(new string[]
 		{

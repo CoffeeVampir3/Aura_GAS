@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{59CDC261-B894-469C-8BAE-9EFC87490F35}",
+	"EngineAssociation": "{B243EBF4-67BF-403D-859A-041946B8C4DA}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -14,7 +14,8 @@
 				"UMG",
 				"CoreUObject",
 				"CommonUI",
-				"EnhancedInput"
+				"EnhancedInput",
+				"DeveloperSettings"
 			]
 		}
 	],

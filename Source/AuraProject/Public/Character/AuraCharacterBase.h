@@ -14,6 +14,7 @@
 class UMotionWarpingComponent;
 class UAuraAttributeSet;
 class UAuraAbilitySystemComponent;
+class UAnimMontage;
 
 UCLASS(Abstract)
 class AURAPROJECT_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
@@ -33,6 +34,11 @@ public:
 	virtual int32 GetUnitLevel() const override;
 	virtual FVector GetCombatSocketLocation() override {return FVector(0.f);}
 	virtual void SetMotionWarpingTargetFacingLocation(const FVector WarpTargetLocation) const override;
+	virtual UAnimMontage* GetHitReactMontage() override {return HitReactMontage;}
+	virtual void Die() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
 	
 	/*
 	 *	End Combat Interface
@@ -62,4 +68,27 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Abilities|Initialization")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Defaults|Level")
+	int32 StartingLevel = 1;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
+
+
+	/*
+	 * Dissolving
+	 */
+
+	void Dissolve();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance,
+		UMaterialInstanceDynamic* DynamicWeaponMaterialInstance);
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Dissolve|SFX")
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Dissolve|SFX")
+	TObjectPtr<UMaterialInstance> DissolveWeaponMaterialInstance;
 };

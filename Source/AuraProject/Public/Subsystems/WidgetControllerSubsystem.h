@@ -21,6 +21,9 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType="ControllerClass", DynamicOutputParam="OutputController"))
 	void ConstructWidgetController(TSubclassOf<UObject> ControllerClass, UObject*& OutputController);
 
+protected:
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
+	
 	UPROPERTY()
 	TMap<TSubclassOf<UObject>, UObject*> ConstructedControllers;
 };

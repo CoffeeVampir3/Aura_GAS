@@ -21,6 +21,11 @@ public:
 	/** Interactable Interface */
 	virtual void Highlight() override;
 	virtual void UnHighlight() override;
+	/** End Interactable Interface */
+
+	/** Combat Interface */
+	virtual void Die() override;
+	/** End Combat Interface */
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnHealthChanged(float NewValue);
@@ -29,13 +34,16 @@ public:
 	void OnMaxHealthChanged(float NewValue);
 	void BroadcastInitialAttributeValues();
 
+	UPROPERTY(BlueprintReadOnly, Category="Combat|AnimatingStatus")
+	bool bHitReacting = false;
+
+	UPROPERTY(BlueprintReadOnly, Category="Movement")
+	float BaseWalkSpeed = 250.f;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitializeAbilityActorInfo() override;
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category="UI|Vital|Health|Display")
 	TObjectPtr<UWidgetComponent> HealthBar;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Defaults|Level")
-	int32 StartingLevel = 1;
 };

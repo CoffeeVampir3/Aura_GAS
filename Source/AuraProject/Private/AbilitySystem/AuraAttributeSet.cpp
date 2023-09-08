@@ -4,10 +4,14 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 
 #include "AbilitySystemGlobals.h"
+#include "AuraGameplayTags.h"
 #include "GameplayEffectExtension.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/GameAbilitySystemLibrary.h"
 #include "GameFramework/Character.h"
+#include "Interaction/CombatInterface.h"
 #include "Net/UnrealNetwork.h"
-
+#include "Player/AuraPlayerController.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -70,13 +74,14 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 {
 	Super::PostGameplayEffectExecute(Data);
 
-	//auto EffectProperties = MakeEffectProperties(Data);
+	const auto EffectProperties = MakeEffectProperties(Data);
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
 		return;
 	}
+	
 	if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
@@ -93,6 +98,24 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			const float NewHealth = GetHealth() - LocalIncomingDamage;
 			const bool bFatal = NewHealth <= 0.f;
 			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
+
+			if(const auto PlayerController = Cast<AAuraPlayerController>(EffectProperties.SourceController);
+				EffectProperties.SourceCharacter != EffectProperties.TargetCharacter)
+			{
+				const bool bBlocked = UGameAbilitySystemLibrary::IsBlockedHit(EffectProperties.EffectContextHandle);
+				const bool bCriticalHit = UGameAbilitySystemLibrary::IsCriticalHit(EffectProperties.EffectContextHandle);
+				PlayerController->CreateDamageNumberPopup(EffectProperties.TargetCharacter, LocalIncomingDamage,
+					bCriticalHit, bBlocked);
+			}
+
+			if(!bFatal)
+			{
+				const auto HitReactContainer = FGameplayTagContainer(TAGS::AnimationStatus::AnimationHitReact);
+				EffectProperties.TargetASC->TryActivateAbilitiesByTag(HitReactContainer);
+			} else if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(EffectProperties.TargetAvatarActor))
+			{
+				CombatInterface->Die();
+			}
 		}
 		return;
 	}
@@ -113,20 +136,19 @@ FEffectProperties UAuraAttributeSet::MakeEffectProperties(const FGameplayEffectM
 		{
 			const auto SourceAvatarActor = SourceActorInfo->AvatarActor.Get();
 			EffectProps.SourceAvatarActor = SourceAvatarActor;
-
-			AController* SourceController = SourceActorInfo->PlayerController.Get();
-			if(!SourceController && SourceAvatarActor)
+			EffectProps.SourceController = SourceActorInfo->PlayerController.Get();
+			
+			if(!EffectProps.SourceController && SourceAvatarActor)
 			{
 				if (const APawn* Pawn = Cast<APawn>(SourceAvatarActor))
 				{
-					SourceController = Pawn->GetController();
+					EffectProps.SourceController = Pawn->GetController();
 				}
 			}
-			EffectProps.SourceController = SourceController;
 
-			if(SourceController)
+			if(EffectProps.SourceController)
 			{
-				EffectProps.SourceCharacter = Cast<ACharacter>(SourceController->GetPawn());
+				EffectProps.SourceCharacter = Cast<ACharacter>(EffectProps.SourceController->GetPawn());
 			}
 		}
 	}

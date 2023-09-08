@@ -12,6 +12,9 @@
 #include "Components/SplineComponent.h"
 #include "Input/GameInputComponent.h"
 #include "Interaction/Interactable.h"
+#include "Subsystems/WorldCombatDeveloperSettings.h"
+#include "Subsystems/WorldCombatSystem.h"
+#include "UI/Widget/DamageTextComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -46,6 +49,24 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	CursorTrace();
 
 	AutoRunAlongSpline();
+}
+
+void AAuraPlayerController::CreateDamageNumberPopup_Implementation(AActor* TargetActor, const float DamageAmount,
+	const bool bWasCrit, const bool bWasBlock)
+{
+	if(!IsValid(TargetActor)) return;
+	auto DamageComponentType = GetWorld()->GetSubsystem<UWorldCombatSystem>()->GetCombatTextWidgetClass();
+	check(DamageComponentType);
+
+	const auto DamageText = NewObject<UDamageTextComponent>(TargetActor, DamageComponentType);
+	DamageText->RegisterComponent();
+	//Trick to get it to spawn @ the target character.
+	DamageText->AttachToComponent(TargetActor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+
+	const auto CombatParams = FCombatWidgetDisplayParameters(DamageAmount, bWasCrit, bWasBlock);
+
+	DamageText->SetDamageText(CombatParams);
 }
 
 void AAuraPlayerController::BeginPlay()

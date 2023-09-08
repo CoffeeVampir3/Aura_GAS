@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/GameAbilitySystemLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
@@ -30,6 +31,10 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 
 	//Initialize for Server
 	InitializeAbilityActorInfo();
+
+	UGameAbilitySystemLibrary::InitializeCharacterDefaultEffects(
+this, CharacterClass, static_cast<float>(StartingLevel), AbilitySystemComponent);
+	
 	AddCharacterAbilities();
 }
 
@@ -64,21 +69,5 @@ void AAuraCharacter::InitializeAbilityActorInfo()
 		{
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
-	}
-
-	//This technically only needs to be called on the server, so we're sort of setting this twice. Not a real issue, just a note.
-	if (!IsValid(GetAbilitySystemComponent()) or InitialGameplayEffects.Num() == 0)
-	{
-		return;
-	}
-
-	const auto AuraASC = GetAbilitySystemComponent();
-	auto EffectContext = AuraASC->MakeEffectContext();
-	EffectContext.AddSourceObject(this);
-
-	for (const auto Effect : InitialGameplayEffects)
-	{
-		const auto EffectSpecHandle = AuraASC->MakeOutgoingSpec(Effect, 1.0, EffectContext);
-		GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	}
 }

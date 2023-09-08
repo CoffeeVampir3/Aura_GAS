@@ -8,6 +8,7 @@
 #include "UObject/WeakInterfacePtr.h"
 #include "AuraPlayerController.generated.h"
 
+class UDamageTextComponent;
 class UInputAction;
 class UInputMappingContext;
 class UAuraAbilitySystemComponent;
@@ -25,6 +26,9 @@ class AURAPROJECT_API AAuraPlayerController : public APlayerController
 public:
 	AAuraPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
+	
+	UFUNCTION(Client, Unreliable)
+	void CreateDamageNumberPopup(AActor* TargetActor, const float DamageAmount, const bool bWasCrit, const bool bWasBlock);
 
 protected:
 	virtual void BeginPlay() override;

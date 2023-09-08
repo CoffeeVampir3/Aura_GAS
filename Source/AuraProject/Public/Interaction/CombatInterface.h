@@ -7,6 +7,8 @@
 
 #include "CombatInterface.generated.h"
 
+class UAnimMontage;
+
 UINTERFACE(MinimalAPI, NotBlueprintable, BlueprintType)
 class UCombatInterface : public UInterface
 {
@@ -27,6 +29,10 @@ public:
 	virtual FVector GetCombatSocketLocation() = 0;
 	UFUNCTION(BlueprintCallable)
 	virtual void SetMotionWarpingTargetFacingLocation(const FVector WarpTargetLocation) const = 0;
+	UFUNCTION(BlueprintCallable)
+	virtual UAnimMontage* GetHitReactMontage();
+
+	virtual void Die() = 0;
 
 	inline static const FName WarpMotionFacingTargetName = FName("TargetFacing");
 };
