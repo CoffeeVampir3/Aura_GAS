@@ -48,6 +48,7 @@ class AURAPROJECT_API UAuraAttributeSet : public UAttributeSet
 
 public:
 	UAuraAttributeSet();
+	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
@@ -75,7 +76,55 @@ public:
 		GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Level, OldValue);
 	}
 #pragma endregion
-	
+
+	/*
+	 *
+	 */
+
+#pragma region PhysicalResistance Attribute
+	UPROPERTY(BlueprintReadOnly, Category="Attributes|Resistances", ReplicatedUsing = OnRep_PhysicalResistance)
+	FGameplayAttributeData PhysicalResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, PhysicalResistance)
+	UFUNCTION()
+	virtual void OnRep_PhysicalResistance(const FGameplayAttributeData& OldValue)
+	{
+		GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, PhysicalResistance, OldValue);
+	}
+#pragma endregion
+
+#pragma region FireResistance Attribute
+	UPROPERTY(BlueprintReadOnly, Category="Attributes|Resistances", ReplicatedUsing = OnRep_FireResistance)
+	FGameplayAttributeData FireResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, FireResistance)
+	UFUNCTION()
+	virtual void OnRep_FireResistance(const FGameplayAttributeData& OldValue)
+	{
+		GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, FireResistance, OldValue);
+	}
+#pragma endregion
+
+#pragma region ArcaneResistance Attribute
+	UPROPERTY(BlueprintReadOnly, Category="Attributes|Resistances", ReplicatedUsing = OnRep_ArcaneResistance)
+	FGameplayAttributeData ArcaneResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ArcaneResistance)
+	UFUNCTION()
+	virtual void OnRep_ArcaneResistance(const FGameplayAttributeData& OldValue)
+	{
+		GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ArcaneResistance, OldValue);
+	}
+#pragma endregion
+
+#pragma region LightningResistance Attribute
+	UPROPERTY(BlueprintReadOnly, Category="Attributes|Resistances", ReplicatedUsing = OnRep_LightningResistance)
+	FGameplayAttributeData LightningResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, LightningResistance)
+	UFUNCTION()
+	virtual void OnRep_LightningResistance(const FGameplayAttributeData& OldValue)
+	{
+		GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, LightningResistance, OldValue);
+	}
+#pragma endregion
+
 	/*
 	 *	Core
 	 */

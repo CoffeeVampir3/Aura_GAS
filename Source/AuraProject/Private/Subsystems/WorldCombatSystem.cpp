@@ -3,8 +3,8 @@
 
 #include "Subsystems/WorldCombatSystem.h"
 
+#include "AuraGameplayTags.h"
 #include "Subsystems/WorldCombatDeveloperSettings.h"
-#include "UI/Widget/DamageTextComponent.h"
 
 bool UWorldCombatSystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {

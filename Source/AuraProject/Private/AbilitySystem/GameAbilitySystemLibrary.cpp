@@ -85,3 +85,22 @@ void UGameAbilitySystemLibrary::SetCriticalHit(FGameplayEffectContextHandle& Eff
 	if(!EffectContext) return;
 	EffectContext->SetIsCriticalHit(HitStatus);
 }
+
+TMap<FGameplayTag, FGameplayTag> UGameAbilitySystemLibrary::GetCombatDamageResistanceMap()
+{
+	static TMap<FGameplayTag, FGameplayTag> CombatDamageResistanceMap;
+	static bool Initialized = false;
+	if(UNLIKELY(!Initialized))
+	{
+		CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Physical, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistancePhysical);
+		CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Fire, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistanceFire);
+		CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Arcane, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistanceArcane);
+		CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Lightning, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistanceLightning);
+	}
+	return CombatDamageResistanceMap;
+}
+
+FGameplayTag UGameAbilitySystemLibrary::GetDamageResistanceTag(const FGameplayTag DamageTag)
+{
+	return *GetCombatDamageResistanceMap().Find(DamageTag);
+}

@@ -12,7 +12,10 @@ namespace TAGS::DATA {
 namespace TAGS::DAMAGE::TYPE
 {
  UE_DEFINE_GAMEPLAY_TAG(Types, "Damage.Type")
+ UE_DEFINE_GAMEPLAY_TAG(Physical, "Damage.Type.Physical")
  UE_DEFINE_GAMEPLAY_TAG(Fire, "Damage.Type.Fire")
+ UE_DEFINE_GAMEPLAY_TAG(Arcane, "Damage.Type.Arcane")
+ UE_DEFINE_GAMEPLAY_TAG(Lightning, "Damage.Type.Lightning")
 }
 
 namespace TAGS::AnimationStatus {
@@ -58,13 +61,22 @@ namespace TAGS::ATTRIBUTES
   UE_DEFINE_GAMEPLAY_TAG(Secondary, "Attributes.Secondary")
   UE_DEFINE_GAMEPLAY_TAG_COMMENT(Armor, "Attributes.Secondary.Armor", "Reduces damage taken, improves block chance")
   UE_DEFINE_GAMEPLAY_TAG_COMMENT(Penetration, "Attributes.Secondary.ArmorPenetration", "Ignores a portion of enemy armor")
-  UE_DEFINE_GAMEPLAY_TAG_COMMENT(Chance, "Attributes.Secondary.BlockChance", "Chance to block incoming attacks")
+  UE_DEFINE_GAMEPLAY_TAG_COMMENT(BlockChance, "Attributes.Secondary.BlockChance", "Chance to block incoming attacks")
   UE_DEFINE_GAMEPLAY_TAG_COMMENT(CriticalHit, "Attributes.Secondary.CriticalHit", "Chance to deal critical damage")
   UE_DEFINE_GAMEPLAY_TAG_COMMENT(CriticalMultiplier, "Attributes.Secondary.CriticalMultiplier", "Multiplier for critical hit damage")
   UE_DEFINE_GAMEPLAY_TAG_COMMENT(HealthRegeneration, "Attributes.Secondary.HealthRegeneration", "Rate of health recovery over time")
   UE_DEFINE_GAMEPLAY_TAG_COMMENT(ManaRegeneration, "Attributes.Secondary.ManaRegeneration", "Rate of mana recovery over time")
   UE_DEFINE_GAMEPLAY_TAG_COMMENT(MaxHealth, "Attributes.Secondary.MaxHealth", "Maximum amount of health")
   UE_DEFINE_GAMEPLAY_TAG_COMMENT(MaxMana, "Attributes.Secondary.MaxMana", "Maximum amount of mana")
+  
+  namespace RESISTANCE
+  {
+   UE_DEFINE_GAMEPLAY_TAG(ResistanceTypes, "Attributes.Secondary.Resistance.Type")
+   UE_DEFINE_GAMEPLAY_TAG(ResistancePhysical, "Attributes.Secondary.Resistance.Physical")
+   UE_DEFINE_GAMEPLAY_TAG(ResistanceFire, "Attributes.Secondary.Resistance.Fire")
+   UE_DEFINE_GAMEPLAY_TAG(ResistanceArcane, "Attributes.Secondary.Resistance.Arcane")
+   UE_DEFINE_GAMEPLAY_TAG(ResistanceLightning, "Attributes.Secondary.Resistance.Lightning")
+  }
  }
   
 }

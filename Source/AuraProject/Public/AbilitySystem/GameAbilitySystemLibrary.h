@@ -36,4 +36,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="AbilitySystemLibrary|GameplayEffects")
 	static void SetCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool HitStatus);
+	
+	static TMap<FGameplayTag, FGameplayTag> GetCombatDamageResistanceMap();
+	static FGameplayTag GetDamageResistanceTag(FGameplayTag DamageTag);
 };

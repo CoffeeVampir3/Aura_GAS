@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "WorldCombatDeveloperSettings.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "UI/Widget/DamageTextComponent.h"
@@ -21,7 +22,7 @@ class AURAPROJECT_API UWorldCombatSystem : public UWorldSubsystem
 
 public:
 	TSubclassOf<UWidgetComponent> GetCombatTextWidgetClass() const {return CombatSettings->DamageTextComponentClass.Get();}
-
+	
 protected:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
