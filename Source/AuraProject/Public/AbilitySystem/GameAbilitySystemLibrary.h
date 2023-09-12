@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayEffectTypes.h"
 #include "Data/CharacterClassInfo.h"
+#include "Interaction/CombatInterface.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameAbilitySystemLibrary.generated.h"
 
@@ -23,7 +24,8 @@ public:
 		ECharacterClass CharacterClass, float Level, UAuraAbilitySystemComponent* AbilitySystemComponent);
 
 	UFUNCTION(BlueprintCallable, Category="AbilitySystemLibrary|CharacterClass|Defaults", meta = (WorldContext = "WorldContextObject"))
-	static void InitializeCharacterDefaultAbilities(const UObject* WorldContextObject, float Level, UAuraAbilitySystemComponent* AbilitySystemComponent);
+	static void InitializeCharacterDefaultAbilities(const UObject* WorldContextObject, const ECharacterClass CharacterClass, float Level, UAuraAbilitySystemComponent*
+	                                                AbilitySystemComponent);
 
 	UFUNCTION(BlueprintCallable, Category="AbilitySystemLibrary|GameplayEffects", BlueprintPure)
 	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
@@ -36,7 +38,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="AbilitySystemLibrary|GameplayEffects")
 	static void SetCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool HitStatus);
-	
-	static TMap<FGameplayTag, FGameplayTag> GetCombatDamageResistanceMap();
-	static FGameplayTag GetDamageResistanceTag(FGameplayTag DamageTag);
+
+	UFUNCTION(BlueprintCallable, Category="AbilitySystemLibrary|GameplayMechanics", meta = (WorldContext = "WorldContextObject"))
+	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject,
+	                                       TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore,
+	                                       float Radius, const FVector& SphereOrigin);
+
+	UFUNCTION(BlueprintCallable, Category="AbilitySystemLibrary|GameplayMechanics", BlueprintPure)
+	static bool AreNotFriends(UAbilitySystemComponent* Source, UAbilitySystemComponent* Target);
+
+	UFUNCTION(BlueprintCallable, Category="Combat|GameplayMechanics|Animation")
+	static FTaggedMontage GetRandomTaggedMontage(TArray<FTaggedMontage> TaggedMontages);
 };

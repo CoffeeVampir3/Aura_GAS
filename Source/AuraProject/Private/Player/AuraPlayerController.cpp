@@ -54,7 +54,7 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 void AAuraPlayerController::CreateDamageNumberPopup_Implementation(AActor* TargetActor, const float DamageAmount,
 	const bool bWasCrit, const bool bWasBlock)
 {
-	if(!IsValid(TargetActor)) return;
+	if(!IsValid(TargetActor) || !IsLocalController()) return;
 	auto DamageComponentType = GetWorld()->GetSubsystem<UWorldCombatSystem>()->GetCombatTextWidgetClass();
 	check(DamageComponentType);
 

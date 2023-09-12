@@ -9,6 +9,33 @@ namespace TAGS::DATA {
  UE_DEFINE_GAMEPLAY_TAG(Level, "Data.Level")
 }
 
+namespace TAGS::STATUS
+{
+ UE_DEFINE_GAMEPLAY_TAG(Status, "Status")
+ UE_DEFINE_GAMEPLAY_TAG(Dead, "Status.Dead")
+}
+
+namespace TAGS::TEAM
+{
+ UE_DEFINE_GAMEPLAY_TAG(Team, "Team")
+ UE_DEFINE_GAMEPLAY_TAG(Player, "Team.Player")
+ UE_DEFINE_GAMEPLAY_TAG(Enemy, "Team.Enemy")
+}
+
+namespace TAGS::ABILITIES::COMBAT
+{
+ UE_DEFINE_GAMEPLAY_TAG(Combat, "Abilities.Combat")
+ UE_DEFINE_GAMEPLAY_TAG(Attack, "Abilities.Combat.Attack")
+}
+
+namespace TAGS::EVENT::MONTAGE::ATTACK
+{
+ UE_DEFINE_GAMEPLAY_TAG(Attack, "Event.Montage.Attack")
+ UE_DEFINE_GAMEPLAY_TAG(RightHand, "Event.Montage.Attack.RightHand")
+ UE_DEFINE_GAMEPLAY_TAG(LeftHand, "Event.Montage.Attack.LeftHand")
+ UE_DEFINE_GAMEPLAY_TAG(Weapon, "Event.Montage.Attack.Weapon") 
+}
+
 namespace TAGS::DAMAGE::TYPE
 {
  UE_DEFINE_GAMEPLAY_TAG(Types, "Damage.Type")

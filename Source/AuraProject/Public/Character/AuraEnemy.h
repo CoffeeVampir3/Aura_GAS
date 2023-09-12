@@ -8,6 +8,8 @@
 #include "AuraEnemy.generated.h"
 
 class UWidgetComponent;
+class UBehaviorTree;
+class ABaseAIController;
 /**
  * 
  */
@@ -18,13 +20,14 @@ class AURAPROJECT_API AAuraEnemy : public AAuraCharacterBase, public IInteractab
 	
 public:
 	AAuraEnemy();
+	virtual void PossessedBy(AController* NewController) override;
+	
 	/** Interactable Interface */
 	virtual void Highlight() override;
 	virtual void UnHighlight() override;
 	/** End Interactable Interface */
 
 	/** Combat Interface */
-	virtual void Die() override;
 	/** End Combat Interface */
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -37,7 +40,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Combat|AnimatingStatus")
 	bool bHitReacting = false;
 
-	UPROPERTY(BlueprintReadOnly, Category="Movement")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Movement")
 	float BaseWalkSpeed = 250.f;
 
 protected:
@@ -46,4 +49,13 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category="UI|Vital|Health|Display")
 	TObjectPtr<UWidgetComponent> HealthBar;
+
+	UPROPERTY(EditAnywhere, Category="AI")
+	TObjectPtr<UBehaviorTree> BehaviourTree;
+	
+	UPROPERTY(EditAnywhere, Category="AI")
+	TObjectPtr<ABaseAIController> BaseAiController;
+
+	FName BT_HitReactingName = FName("HitReacting");
+	FName BT_RangedAttacker = FName("RangedAttacker");
 };

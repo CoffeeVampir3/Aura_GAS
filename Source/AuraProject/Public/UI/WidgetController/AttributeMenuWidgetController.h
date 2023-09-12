@@ -26,8 +26,4 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attribute|Delegate")
 	FSendAttributeInfoSignature AttributeInfoDelegate;
-
-protected:
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UGameAttributeInfo> GameAttributeInfo;
 };

@@ -3,6 +3,7 @@
 
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "AbilitySystem/Data/GameAttributeInfo.h"
+#include "Subsystems/WorldCombatSystem.h"
 
 void UAttributeMenuWidgetController::BindCallbacks()
 {
@@ -14,7 +15,7 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 {
 	Super::BroadcastInitialValues();
 
-	check(GameAttributeInfo);
+	const auto CombatSubsystem = GetWorld()->GetSubsystem<UWorldCombatSystem>();
 
 	TArray<FGameplayAttribute> Attributes;
 	AbilitySystemComponent->GetAllAttributes(Attributes);
@@ -22,7 +23,7 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 	for (auto Attribute : Attributes)
 	{
 		FGameplayAttributeInfo AttributeInfo;
-		if(bool IsInfoValid = GameAttributeInfo->TryGetTagInfoFromAttribute(Attribute, AttributeInfo); !IsInfoValid)
+		if(const bool IsInfoValid = CombatSubsystem->TryGetTagInfoFromAttribute(Attribute, AttributeInfo); !IsInfoValid)
 		{
 			UE_LOG(LogTemp,
 				Error,
@@ -33,7 +34,7 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 		}
 
 		bool bFoundAttribute = false;
-		float Value = AbilitySystemComponent->GetGameplayAttributeValue(AttributeInfo.BindingGameplayAttribute, bFoundAttribute);
+		const float Value = AbilitySystemComponent->GetGameplayAttributeValue(AttributeInfo.BindingGameplayAttribute, bFoundAttribute);
 		if(!bFoundAttribute)
 		{
 			continue;

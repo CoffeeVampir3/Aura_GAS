@@ -37,7 +37,10 @@ AGameProjectile::AGameProjectile()
 
 void AGameProjectile::OnImpact()
 {
-	TravelingSoundComponent->Stop();
+	if(TravelingSoundComponent)
+	{
+		TravelingSoundComponent->Stop();
+	}
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 }
@@ -45,7 +48,8 @@ void AGameProjectile::OnImpact()
 void AGameProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(OtherActor == SourceAvatar) return;
+	if(!DamageEffectSpecHandle.Data.IsValid() ||
+		OtherActor == DamageEffectSpecHandle.Data.Get()->GetEffectContext().GetEffectCauser()) return;
 	
 	OnImpact();
 

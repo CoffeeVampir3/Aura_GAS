@@ -39,22 +39,14 @@ class AURAPROJECT_API UGameAttributeInfo : public UDataAsset
 
 public:
 	void BuildMaps();
-	
-	UFUNCTION(BlueprintCallable, Category = "Attribute Info", meta=(ExpandBoolAsExecs="ReturnValue"))
-	bool TryGetTagInfo(const FGameplayTag& AttributeTag, FGameplayAttributeInfo& OutAttributeInfo);
 
-	UFUNCTION(BlueprintCallable, Category = "Attribute Info", meta=(ExpandBoolAsExecs="ReturnValue"))
-	bool TryGetTagInfoFromAttribute(const FGameplayAttribute& Attribute, FGameplayAttributeInfo& OutAttributeInfo);
+	UPROPERTY()
+    TMap<FGameplayTag, FGameplayAttributeInfo> TagToAttributeInfo;
+
+    UPROPERTY()
+    TMap<FGameplayAttribute, FGameplayAttributeInfo> AttributeToAttributeInfo;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<FGameplayAttributeInfo> AttributeInformation;
-
-	bool bMapsBuilt = false;
-
-	UPROPERTY()
-	TMap<FGameplayTag, FGameplayAttributeInfo> TagToAttributeInfo;
-
-	UPROPERTY()
-	TMap<FGameplayAttribute, FGameplayAttributeInfo> AttributeToAttributeInfo;
 };

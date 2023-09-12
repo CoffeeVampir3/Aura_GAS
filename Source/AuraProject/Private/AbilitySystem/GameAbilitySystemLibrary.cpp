@@ -9,6 +9,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Game/AuraGameModeBase.h"
+#include "Interaction/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
 
 void UGameAbilitySystemLibrary::InitializeCharacterDefaultEffects(const UObject* WorldContextObject,
@@ -19,7 +20,7 @@ void UGameAbilitySystemLibrary::InitializeCharacterDefaultEffects(const UObject*
 	const auto GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if(!GameMode) return;
 	
-	auto [PrimaryAttributes] = GameMode->CharacterDefaultClassInfo->GetClassDefaultInfo(CharacterClass);
+	auto [PrimaryAttributes, ClassAbilities] = GameMode->CharacterDefaultClassInfo->GetClassDefaultInfo(CharacterClass);
 	const auto AttributeEngine = GameMode->CharacterDefaultClassInfo->AttributeEngine;
 	const auto Vitals = GameMode->CharacterDefaultClassInfo->BaseVitals;
 	const auto Growth = GameMode->CharacterDefaultClassInfo->GrowthAttributes;
@@ -44,16 +45,26 @@ void UGameAbilitySystemLibrary::InitializeCharacterDefaultEffects(const UObject*
 	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*VitalEffectSpec.Data.Get());
 }
 
-void UGameAbilitySystemLibrary::InitializeCharacterDefaultAbilities(const UObject* WorldContextObject, float Level,
+void UGameAbilitySystemLibrary::InitializeCharacterDefaultAbilities(
+	const UObject* WorldContextObject,
+	const ECharacterClass CharacterClass,
+	const float Level,
 	UAuraAbilitySystemComponent* AbilitySystemComponent)
 {
 	const auto GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if(!GameMode) return;
 
+	auto [PrimaryAttributes, ClassAbilities] = GameMode->CharacterDefaultClassInfo->GetClassDefaultInfo(CharacterClass);
 	const auto DefaultInfo = GameMode->CharacterDefaultClassInfo;
-	const auto StartupAbilities = DefaultInfo->CommonAbilities;
+	const auto CommonAbilities = DefaultInfo->CommonAbilities;
 
-	for (auto Ability : StartupAbilities)
+	for (auto Ability : CommonAbilities)
+	{
+		auto AbilitySpec = FGameplayAbilitySpec(Ability, Level);
+		AbilitySystemComponent->GiveAbility(AbilitySpec);
+	}
+	
+	for (auto Ability : ClassAbilities)
 	{
 		auto AbilitySpec = FGameplayAbilitySpec(Ability, Level);
 		AbilitySystemComponent->GiveAbility(AbilitySpec);
@@ -86,21 +97,43 @@ void UGameAbilitySystemLibrary::SetCriticalHit(FGameplayEffectContextHandle& Eff
 	EffectContext->SetIsCriticalHit(HitStatus);
 }
 
-TMap<FGameplayTag, FGameplayTag> UGameAbilitySystemLibrary::GetCombatDamageResistanceMap()
+void UGameAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject,
+                                                           TArray<AActor*>& OutOverlappingActors,
+                                                           const TArray<AActor*>& ActorsToIgnore,
+                                                           float Radius,
+                                                           const FVector& SphereOrigin)
 {
-	static TMap<FGameplayTag, FGameplayTag> CombatDamageResistanceMap;
-	static bool Initialized = false;
-	if(UNLIKELY(!Initialized))
+	FCollisionQueryParams SphereParams;
+	SphereParams.AddIgnoredActors(ActorsToIgnore);
+	
+	if (const UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
 	{
-		CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Physical, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistancePhysical);
-		CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Fire, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistanceFire);
-		CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Arcane, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistanceArcane);
-		CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Lightning, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistanceLightning);
+		TArray<FOverlapResult> Overlaps;
+		World->OverlapMultiByObjectType(
+			Overlaps,
+			SphereOrigin,
+			FQuat::Identity,
+			FCollisionObjectQueryParams(FCollisionObjectQueryParams::InitType::AllDynamicObjects),
+			FCollisionShape::MakeSphere(Radius),
+			SphereParams);
+		
+		for (FOverlapResult& Overlap : Overlaps)
+		{
+			if (Overlap.GetActor()->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsDead(Overlap.GetActor()))
+			{
+				OutOverlappingActors.AddUnique(ICombatInterface::Execute_GetCombatAvatar(Overlap.GetActor()));
+			}
+		}
 	}
-	return CombatDamageResistanceMap;
 }
 
-FGameplayTag UGameAbilitySystemLibrary::GetDamageResistanceTag(const FGameplayTag DamageTag)
+bool UGameAbilitySystemLibrary::AreNotFriends(UAbilitySystemComponent* Source, UAbilitySystemComponent* Target)
 {
-	return *GetCombatDamageResistanceMap().Find(DamageTag);
+	const bool bIsOppositeTeam = Source->HasMatchingGameplayTag(TAGS::TEAM::Player) != Target->HasMatchingGameplayTag(TAGS::TEAM::Player);
+	return bIsOppositeTeam;
+}
+
+FTaggedMontage UGameAbilitySystemLibrary::GetRandomTaggedMontage(TArray<FTaggedMontage> TaggedMontages)
+{
+	return TaggedMontages[FMath::RandRange(0, TaggedMontages.Num()-1)];
 }

@@ -3,6 +3,7 @@
 
 #include "Character/AuraCharacterBase.h"
 
+#include "AuraGameplayTags.h"
 #include "MotionWarpingComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
@@ -28,7 +29,7 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-int32 AAuraCharacterBase::GetUnitLevel() const
+int32 AAuraCharacterBase::GetUnitLevel_Implementation() const
 {
 	if (!AttributeSet)
 		return -1;
@@ -36,9 +37,36 @@ int32 AAuraCharacterBase::GetUnitLevel() const
 	return static_cast<int32>(AttributeSet.Get()->GetLevel());
 }
 
-void AAuraCharacterBase::SetMotionWarpingTargetFacingLocation(const FVector WarpTargetLocation) const
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(FGameplayTag GameplayTag)
+{
+	for(auto & [Montage, MontageTag, MeshTag, SocketName] : TaggedMontages)
+	{
+		if(!GameplayTag.MatchesTagExact(MontageTag)) continue;
+		if(auto TaggedMeshes =
+			this->GetComponentsByTag(USkeletalMeshComponent::StaticClass(),MeshTag); TaggedMeshes.Num() > 0)
+		{
+			const auto Mesh = Cast<USkeletalMeshComponent>(TaggedMeshes[0]);
+			return Mesh->GetSocketLocation(SocketName);
+		}
+	}
+	return FVector::ZeroVector;
+}
+
+void AAuraCharacterBase::SetMotionWarpingTargetFacingLocation_Implementation(const FVector WarpTargetLocation) const
 {
 	MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation(WarpMotionFacingTargetName, WarpTargetLocation);
+}
+
+bool AAuraCharacterBase::IsDead_Implementation()
+{
+	if(!IsValid(AbilitySystemComponent)) return true;
+	
+	return AbilitySystemComponent->HasMatchingGameplayTag(TAGS::STATUS::Dead);
+}
+
+AActor* AAuraCharacterBase::GetCombatAvatar_Implementation()
+{
+	return this;
 }
 
 void AAuraCharacterBase::Die()
@@ -59,6 +87,8 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	AbilitySystemComponent->AddLooseGameplayTag(TAGS::STATUS::Dead);
 
 	Dissolve();
 }

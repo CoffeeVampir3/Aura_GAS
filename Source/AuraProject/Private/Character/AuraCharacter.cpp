@@ -4,6 +4,7 @@
 #include "Character/AuraCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/GameAbilitySystemLibrary.h"
@@ -46,11 +47,6 @@ void AAuraCharacter::OnRep_PlayerState()
 	InitializeAbilityActorInfo();
 }
 
-FVector AAuraCharacter::GetCombatSocketLocation()
-{
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
-}
-
 void AAuraCharacter::InitializeAbilityActorInfo()
 {
 	Super::InitializeAbilityActorInfo();
@@ -70,4 +66,6 @@ void AAuraCharacter::InitializeAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
+
+	AbilitySystemComponent->AddLooseGameplayTag(TAGS::TEAM::Player);
 }

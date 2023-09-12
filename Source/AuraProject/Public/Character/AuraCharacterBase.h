@@ -11,6 +11,7 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UTaggedMontageData;
 class UMotionWarpingComponent;
 class UAuraAttributeSet;
 class UAuraAbilitySystemComponent;
@@ -31,24 +32,35 @@ public:
 	 *	Combat Interface
 	 */
 	
-	virtual int32 GetUnitLevel() const override;
-	virtual FVector GetCombatSocketLocation() override {return FVector(0.f);}
-	virtual void SetMotionWarpingTargetFacingLocation(const FVector WarpTargetLocation) const override;
-	virtual UAnimMontage* GetHitReactMontage() override {return HitReactMontage;}
+	virtual int32 GetUnitLevel_Implementation() const override;
+	virtual FVector GetCombatSocketLocation_Implementation(FGameplayTag GameplayTag) override;
+	virtual void SetMotionWarpingTargetFacingLocation_Implementation(const FVector WarpTargetLocation) const override;
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override {return HitReactMontage;}
+	virtual AActor* GetCombatTargetActor_Implementation() override { return CombatTarget.Get();}
+	virtual void SetCombatTargetActor_Implementation(AActor* TargetActor) override { CombatTarget = TargetActor;}
+	virtual bool IsDead_Implementation() override;
+	virtual AActor* GetCombatAvatar_Implementation() override;
+	virtual TArray<FTaggedMontage> GetTaggedMontageData_Implementation() override {return TaggedMontages;}
 	virtual void Die() override;
-
-	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastHandleDeath();
 	
 	/*
 	 *	End Combat Interface
 	 */
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Class|Attributes")
 	ECharacterClass CharacterClass;
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Animation")
+	TArray<FTaggedMontage> TaggedMontages;
+
+	UPROPERTY(BlueprintReadOnly, Transient, Category="Combat")
+	TWeakObjectPtr<AActor> CombatTarget;
 
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
@@ -59,7 +71,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="Abilities")
 	TObjectPtr<UAuraAttributeSet> AttributeSet;
 
-	UPROPERTY(EditAnywhere, Category="CATEGORY")
+	UPROPERTY(EditAnywhere, Category="Animation")
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 
 	virtual void InitializeAbilityActorInfo();

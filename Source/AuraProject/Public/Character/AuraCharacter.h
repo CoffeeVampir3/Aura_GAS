@@ -19,11 +19,7 @@ public:
 	AAuraCharacter();
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
-	virtual FVector GetCombatSocketLocation() override;
 
 protected:
 	virtual void InitializeAbilityActorInfo() override;
-	
-	UPROPERTY(EditAnywhere, Category="Combat")
-	FName WeaponTipSocketName;
 };

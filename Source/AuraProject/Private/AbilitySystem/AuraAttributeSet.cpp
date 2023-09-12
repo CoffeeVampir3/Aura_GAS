@@ -104,8 +104,14 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			const bool bFatal = NewHealth <= 0.f;
 			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
 
-			if(const auto PlayerController = Cast<AAuraPlayerController>(EffectProperties.SourceController);
-				EffectProperties.SourceCharacter != EffectProperties.TargetCharacter)
+			auto PlayerController = Cast<AAuraPlayerController>(EffectProperties.SourceController);
+			if(!PlayerController)
+			{
+				PlayerController = Cast<AAuraPlayerController>(EffectProperties.TargetController);
+			}
+			
+			if(PlayerController && EffectProperties.SourceCharacter && EffectProperties.TargetCharacter &&
+				(EffectProperties.SourceCharacter != EffectProperties.TargetCharacter))
 			{
 				const bool bBlocked = UGameAbilitySystemLibrary::IsBlockedHit(EffectProperties.EffectContextHandle);
 				const bool bCriticalHit = UGameAbilitySystemLibrary::IsCriticalHit(EffectProperties.EffectContextHandle);
@@ -157,7 +163,7 @@ FEffectProperties UAuraAttributeSet::MakeEffectProperties(const FGameplayEffectM
 			}
 		}
 	}
-
+	
 	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
 	{
 		EffectProps.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
@@ -165,6 +171,5 @@ FEffectProperties UAuraAttributeSet::MakeEffectProperties(const FGameplayEffectM
 		EffectProps.TargetCharacter = Cast<ACharacter>(EffectProps.TargetAvatarActor);
 		EffectProps.TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(EffectProps.TargetAvatarActor);
 	}
-
 	return EffectProps;
 }

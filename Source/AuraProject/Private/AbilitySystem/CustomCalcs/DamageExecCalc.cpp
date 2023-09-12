@@ -7,6 +7,7 @@
 #include "GameAbilityTypes.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/GameAbilitySystemLibrary.h"
+#include "Subsystems/WorldCombatSystem.h"
 
 struct GameDamageStatics
 {
@@ -111,10 +112,12 @@ void UDamageExecCalc::Execute_Implementation(const FGameplayEffectCustomExecutio
 		ExecutionParams,
 		EvaluationParameters,
 		DamageStatics().CriticalMultiplierDef);
+
+	auto WorldCombatSub = SourceASC->GetWorld()->GetSubsystem<UWorldCombatSystem>();
 	
 	float Damage = 0.0f;
 	FGameplayTagContainer DamageTags = FGameplayTagContainer();
-	for (auto &[DamageTag, ResistanceTag] : UGameAbilitySystemLibrary::GetCombatDamageResistanceMap())
+	for (auto &[DamageTag, ResistanceTag] : WorldCombatSub->GetCombatDamageResistanceMap())
 	{
 		const float TargetResistance = CalculateAttribute(
 			ExecutionParams,

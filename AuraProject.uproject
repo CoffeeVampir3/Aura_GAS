@@ -15,7 +15,8 @@
 				"CoreUObject",
 				"CommonUI",
 				"EnhancedInput",
-				"DeveloperSettings"
+				"DeveloperSettings",
+				"AIModule"
 			]
 		}
 	],
