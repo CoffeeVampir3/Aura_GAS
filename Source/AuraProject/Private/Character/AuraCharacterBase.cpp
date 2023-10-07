@@ -9,6 +9,7 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AuraProject/AuraProject.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AAuraCharacterBase::AAuraCharacterBase()
@@ -39,14 +40,14 @@ int32 AAuraCharacterBase::GetUnitLevel_Implementation() const
 
 FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(FGameplayTag GameplayTag)
 {
-	for(auto & [Montage, MontageTag, MeshTag, SocketName] : TaggedMontages)
+	for(auto &TaggedMontage : TaggedMontages)
 	{
-		if(!GameplayTag.MatchesTagExact(MontageTag)) continue;
+		if(!GameplayTag.MatchesTagExact(TaggedMontage.SocketTag)) continue;
 		if(auto TaggedMeshes =
-			this->GetComponentsByTag(USkeletalMeshComponent::StaticClass(),MeshTag); TaggedMeshes.Num() > 0)
+			this->GetComponentsByTag(USkeletalMeshComponent::StaticClass(), TaggedMontage.SkeletalComponentName); TaggedMeshes.Num() > 0)
 		{
 			const auto Mesh = Cast<USkeletalMeshComponent>(TaggedMeshes[0]);
-			return Mesh->GetSocketLocation(SocketName);
+			return Mesh->GetSocketLocation(TaggedMontage.SocketName);
 		}
 	}
 	return FVector::ZeroVector;
@@ -69,6 +70,19 @@ AActor* AAuraCharacterBase::GetCombatAvatar_Implementation()
 	return this;
 }
 
+bool AAuraCharacterBase::TryGetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag, FTaggedMontage& OutTaggedMontage)
+{
+	for (auto TaggedMontage : TaggedMontages)
+	{
+		if (TaggedMontage.MontageTag == MontageTag)
+		{
+			OutTaggedMontage = TaggedMontage;
+			return true;
+		}
+	}
+	return false;
+}
+
 void AAuraCharacterBase::Die()
 {
     Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
@@ -77,6 +91,8 @@ void AAuraCharacterBase::Die()
 
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
+	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
+	
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);

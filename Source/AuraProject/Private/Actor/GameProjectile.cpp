@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
 #include "NiagaraFunctionLibrary.h"
+#include "AbilitySystem/GameAbilitySystemLibrary.h"
 #include "AuraProject/AuraProject.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
@@ -48,9 +49,19 @@ void AGameProjectile::OnImpact()
 void AGameProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(!DamageEffectSpecHandle.Data.IsValid() ||
-		OtherActor == DamageEffectSpecHandle.Data.Get()->GetEffectContext().GetEffectCauser()) return;
-	
+	if(!DamageEffectSpecHandle.Data.IsValid()) return;
+
+	const auto TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OtherActor);
+	const auto EffectCauser = DamageEffectSpecHandle.Data.Get()->GetEffectContext().GetEffectCauser();
+	const auto SourceASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(EffectCauser);
+
+	//Both components are valid, return if they are both equal, or if they are friends.
+	if(TargetASC && SourceASC && (TargetASC == SourceASC ||
+		!UGameAbilitySystemLibrary::AreNotFriends(SourceASC, TargetASC)))
+	{
+		return;
+	}
+		
 	OnImpact();
 
 	if(!HasAuthority())
@@ -59,7 +70,7 @@ void AGameProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		return;
 	}
 
-	if(const auto TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OtherActor))
+	if(TargetASC)
 	{
 		TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
 	}

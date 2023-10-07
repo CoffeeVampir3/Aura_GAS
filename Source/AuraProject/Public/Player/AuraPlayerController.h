@@ -8,12 +8,12 @@
 #include "UObject/WeakInterfacePtr.h"
 #include "AuraPlayerController.generated.h"
 
+class IInteractable;
 class UDamageTextComponent;
 class UInputAction;
 class UInputMappingContext;
 class UAuraAbilitySystemComponent;
 class UGameInputConfiguration;
-class IInteractable;
 class USplineComponent;
 /**
  * 

@@ -100,6 +100,6 @@ bool FCustomEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bO
 		AddInstigator(Instigator.Get(), EffectCauser.Get()); // Just to initialize InstigatorAbilitySystemComponent
 	}	
 	
-	bOutSuccess = true;
+	bOutSuccess &= true;
 	return true;
 }

@@ -26,14 +26,44 @@ namespace TAGS::ABILITIES::COMBAT
 {
  UE_DEFINE_GAMEPLAY_TAG(Combat, "Abilities.Combat")
  UE_DEFINE_GAMEPLAY_TAG(Attack, "Abilities.Combat.Attack")
+ UE_DEFINE_GAMEPLAY_TAG(Summon, "Abilities.Combat.Summon")
+}
+
+namespace TAGS::COOLDOWN
+{
+ UE_DEFINE_GAMEPLAY_TAG(Cooldown, "Cooldown")
+ namespace FIRE
+ {
+  UE_DEFINE_GAMEPLAY_TAG(Fire, "Cooldown.Fire")
+  UE_DEFINE_GAMEPLAY_TAG(Firebolt, "Cooldown.Fire.Firebolt")
+ }
+}
+
+namespace TAGS::ABILITYIDS
+{
+ UE_DEFINE_GAMEPLAY_TAG(AbilityIds, "AbilityIds")
+ namespace FIRE
+ {
+  UE_DEFINE_GAMEPLAY_TAG(Fire, "AbilityIds.Fire")
+  UE_DEFINE_GAMEPLAY_TAG(Firebolt, "AbilityIds.Fire.Firebolt")
+ }
+}
+
+namespace TAGS::EVENT::COMBATSOCKET
+{
+ UE_DEFINE_GAMEPLAY_TAG(CombatSocket, "Event.CombatSocket")
+ UE_DEFINE_GAMEPLAY_TAG(RightHand, "Event.CombatSocket.RightHand")
+ UE_DEFINE_GAMEPLAY_TAG(LeftHand, "Event.CombatSocket.LeftHand")
+ UE_DEFINE_GAMEPLAY_TAG(Weapon, "Event.CombatSocket.Weapon") 
 }
 
 namespace TAGS::EVENT::MONTAGE::ATTACK
 {
  UE_DEFINE_GAMEPLAY_TAG(Attack, "Event.Montage.Attack")
- UE_DEFINE_GAMEPLAY_TAG(RightHand, "Event.Montage.Attack.RightHand")
- UE_DEFINE_GAMEPLAY_TAG(LeftHand, "Event.Montage.Attack.LeftHand")
- UE_DEFINE_GAMEPLAY_TAG(Weapon, "Event.Montage.Attack.Weapon") 
+ UE_DEFINE_GAMEPLAY_TAG(One, "Event.Montage.Attack.1")
+ UE_DEFINE_GAMEPLAY_TAG(Two, "Event.Montage.Attack.2")
+ UE_DEFINE_GAMEPLAY_TAG(Three, "Event.Montage.Attack.3")
+ UE_DEFINE_GAMEPLAY_TAG(Four, "Event.Montage.Attack.4")
 }
 
 namespace TAGS::DAMAGE::TYPE

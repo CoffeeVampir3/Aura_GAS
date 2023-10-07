@@ -6,6 +6,7 @@
 #include "Engine/DeveloperSettings.h"
 #include "WorldCombatDeveloperSettings.generated.h"
 
+class UGameAbilityInfoData;
 class UGameAttributeInfo;
 class UDamageTextComponent;
 /**
@@ -20,5 +21,8 @@ public:
 	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
 	
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="Attributes")
-    FSoftObjectPath GameAttributeInfo;
+    TSoftObjectPtr<UGameAttributeInfo> GameAttributeInfo;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="Attributes")
+	TSoftObjectPtr<UGameAbilityInfoData> GameAbilityInfo;
 };

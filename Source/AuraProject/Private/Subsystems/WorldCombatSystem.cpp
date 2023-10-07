@@ -6,6 +6,7 @@
 #include "AbilitySystem/Data/GameAttributeInfo.h"
 #include "Subsystems/WorldCombatDeveloperSettings.h"
 #include "AuraGameplayTags.h"
+#include "AbilitySystem/Data/GameAbilityInfoData.h"
 
 bool UWorldCombatSystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
@@ -20,9 +21,12 @@ void UWorldCombatSystem::Initialize(FSubsystemCollectionBase& Collection)
 	check(Settings);
 	CombatSettings = Settings;
 
-	GameAttributeInfo = Cast<UGameAttributeInfo>(Settings->GameAttributeInfo.ResolveObject());
+	GameAttributeInfo = Settings->GameAttributeInfo.LoadSynchronous();
 	check(GameAttributeInfo);
 	GameAttributeInfo->BuildMaps();
+
+	GameAbilityInfo = Settings->GameAbilityInfo.LoadSynchronous();
+	check(GameAbilityInfo);
 
 	CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Physical, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistancePhysical);
     CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Fire, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistanceFire);
@@ -55,6 +59,19 @@ bool UWorldCombatSystem::TryGetTagInfoFromAttribute(const FGameplayAttribute& At
 
 	OutAttributeInfo = *Result;
 	return true;
+}
+
+bool UWorldCombatSystem::TryGetAbilityInfoFromTag(const FGameplayTag& AbilityTag, FGameAbilityInfo& OutAttributeInfo)
+{
+	for(auto Info : GameAbilityInfo->AbilityInformation)
+	{
+		if(Info.AbilityTag == AbilityTag)
+		{
+			OutAttributeInfo = Info;
+			return true;
+		}
+	}
+	return false;
 }
 
 TArray<FGameplayAttributeInfo> UWorldCombatSystem::GetAllMatchingAttributeInfoFromParentTag(FGameplayTag ParentTag) const

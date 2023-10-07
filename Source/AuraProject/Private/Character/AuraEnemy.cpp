@@ -69,6 +69,15 @@ void AAuraEnemy::BroadcastInitialAttributeValues()
 	OnHealthChanged(AttributeSet->GetHealth());
 }
 
+void AAuraEnemy::Die()
+{
+	if(HasAuthority() && BaseAiController && BaseAiController->GetBlackboardComponent())
+	{
+		BaseAiController->GetBlackboardComponent()->SetValueAsBool(BT_IsDead, true);
+	}
+	Super::Die();
+}
+
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();

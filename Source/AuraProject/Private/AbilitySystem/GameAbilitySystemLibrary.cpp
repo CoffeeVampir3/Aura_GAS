@@ -43,6 +43,12 @@ void UGameAbilitySystemLibrary::InitializeCharacterDefaultEffects(const UObject*
 
 	const auto VitalEffectSpec = AbilitySystemComponent->MakeOutgoingSpec(Vitals, Level, EffectContext);
 	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*VitalEffectSpec.Data.Get());
+
+	for(const auto Effect : GameMode->CharacterDefaultClassInfo->CommonEffects)
+	{
+		const auto NewEffect = AbilitySystemComponent->MakeOutgoingSpec(Effect, Level, EffectContext);
+		AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*NewEffect.Data.Get());
+	}
 }
 
 void UGameAbilitySystemLibrary::InitializeCharacterDefaultAbilities(

@@ -9,6 +9,8 @@
 #include "UI/Widget/DamageTextComponent.h"
 #include "WorldCombatSystem.generated.h"
 
+class UGameAbilityInfoData;
+class UAbilityInfo;
 struct FGameplayTag;
 struct FGameplayAttributeInfo;
 class UWidgetComponent;
@@ -27,6 +29,9 @@ public:
 	bool TryGetTagInfo(const FGameplayTag& AttributeTag, FGameplayAttributeInfo& OutAttributeInfo);
 	UFUNCTION(BlueprintCallable)
 	bool TryGetTagInfoFromAttribute(const FGameplayAttribute& Attribute, FGameplayAttributeInfo& OutAttributeInfo);
+
+	UFUNCTION(BlueprintCallable, meta=(ExpandBoolAsExecs="ReturnValue"))
+	bool TryGetAbilityInfoFromTag(const FGameplayTag& AttributeTag, FGameAbilityInfo& OutAttributeInfo);
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FGameplayAttributeInfo> GetAllMatchingAttributeInfoFromParentTag(FGameplayTag ParentTag) const;
@@ -52,6 +57,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UGameAttributeInfo> GameAttributeInfo;
+	
+	UPROPERTY()
+	TObjectPtr<UGameAbilityInfoData> GameAbilityInfo;
 
 	UPROPERTY()
 	TMap<FGameplayTag, FGameplayTag> CombatDamageResistanceMap;

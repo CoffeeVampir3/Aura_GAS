@@ -18,13 +18,13 @@ void UProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UProjectileAbility::SpawnProjectile(const FVector& TargetLocation)
+void UProjectileAbility::SpawnProjectile(const FVector& TargetLocation, const FGameplayTag& CombatSocketTag)
 {
 	const auto AvatarActor = GetAvatarActorFromActorInfo();
 	if(!AvatarActor->HasAuthority()) return;
 	//We're the server.
 	
-	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(AvatarActor, TAGS::EVENT::MONTAGE::ATTACK::Weapon);
+	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(AvatarActor, CombatSocketTag);
 	FRotator TargetRot = (TargetLocation - SocketLocation).Rotation();
 	TargetRot.Pitch = 0.f;
 

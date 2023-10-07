@@ -12,7 +12,7 @@ void AAuraHUD::InitOverlay(AAuraPlayerController* PC, AAuraPlayerState* PS, UAur
 	checkf(OverlayWidgetClass, TEXT("Overlay widget class was not set in the HUD class you dumb fuck."));
 
 	OverlayWidget = CreateWidget<UAuraUserWidget>(GetWorld(), OverlayWidgetClass.Get());
-
+	
 	auto WidgetControllerSubsystem = GetWorld()->GetSubsystem<UWidgetControllerSubsystem>();
 	check(WidgetControllerSubsystem);
 	

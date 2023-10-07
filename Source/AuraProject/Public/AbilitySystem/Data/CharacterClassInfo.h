@@ -52,6 +52,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults|Engine")
 	TSubclassOf<UGameplayEffect> AttributeEngine;
 
+	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults|Effects")
+	TArray<TSubclassOf<UGameplayEffect>> CommonEffects;
+
 	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults|Abilities")
 	TArray<TSubclassOf<UBaseAbility>> CommonAbilities;
 };

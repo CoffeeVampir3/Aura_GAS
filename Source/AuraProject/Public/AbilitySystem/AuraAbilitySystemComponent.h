@@ -8,6 +8,8 @@
 #include "AuraAbilitySystemComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer&)
+DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven);
+DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
 
 /**
  * 
@@ -21,10 +23,19 @@ public:
 	void AbilityActorInfoSet();
 	void AddAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
 
+	void ForEachAbility(const FForEachAbility& ForEachDelegate);
+
+	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+
 	void AbilityInputTagHeld(const FGameplayTag& Tag);
 	void AbilityInputTagReleased(const FGameplayTag& Tag);
 
+	virtual void OnRep_ActivateAbilities() override;
+
 	FEffectAssetTags EffectAssetTagsDelegate;
+	FAbilitiesGiven AbilitiesGivenDelegate;
+	bool bHasAbilitiesGiven;
 	
 protected:
 

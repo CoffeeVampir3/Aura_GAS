@@ -37,6 +37,8 @@ public:
 	void OnMaxHealthChanged(float NewValue);
 	void BroadcastInitialAttributeValues();
 
+	virtual void Die() override;
+
 	UPROPERTY(BlueprintReadOnly, Category="Combat|AnimatingStatus")
 	bool bHitReacting = false;
 
@@ -58,4 +60,5 @@ protected:
 
 	FName BT_HitReactingName = FName("HitReacting");
 	FName BT_RangedAttacker = FName("RangedAttacker");
+	FName BT_IsDead = FName("IsDead");
 };

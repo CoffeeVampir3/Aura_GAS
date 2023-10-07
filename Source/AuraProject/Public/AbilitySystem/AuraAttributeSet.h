@@ -77,6 +77,18 @@ public:
 	}
 #pragma endregion
 
+#pragma region Experience Attribute
+	UPROPERTY(BlueprintReadOnly, Category="Growth Attribute|Attribute", ReplicatedUsing = OnRep_Experience)
+	FGameplayAttributeData Experience;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Experience)
+	UFUNCTION()
+	virtual void OnRep_Experience(const FGameplayAttributeData& OldValue)
+	{
+		GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Experience, OldValue);
+	}
+#pragma endregion
+
+
 	/*
 	 *
 	 */

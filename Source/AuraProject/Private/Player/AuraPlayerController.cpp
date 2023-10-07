@@ -12,7 +12,6 @@
 #include "Components/SplineComponent.h"
 #include "Input/GameInputComponent.h"
 #include "Interaction/Interactable.h"
-#include "Subsystems/WorldCombatDeveloperSettings.h"
 #include "Subsystems/WorldCombatSystem.h"
 #include "UI/Widget/DamageTextComponent.h"
 

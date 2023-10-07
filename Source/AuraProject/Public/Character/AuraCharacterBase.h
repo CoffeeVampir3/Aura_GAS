@@ -41,6 +41,8 @@ public:
 	virtual bool IsDead_Implementation() override;
 	virtual AActor* GetCombatAvatar_Implementation() override;
 	virtual TArray<FTaggedMontage> GetTaggedMontageData_Implementation() override {return TaggedMontages;}
+	virtual UNiagaraSystem* GetBloodImpactEffect_Implementation() override {return BloodImpactEffect;}
+	virtual bool TryGetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag, FTaggedMontage& OutTaggedMontage) override;
 	virtual void Die() override;
 	
 	/*
@@ -62,7 +64,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Transient, Category="Combat")
 	TWeakObjectPtr<AActor> CombatTarget;
 
-	UPROPERTY(EditAnywhere, Category="Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	UPROPERTY(BlueprintReadOnly, Category="Abilities")
@@ -73,6 +75,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Animation")
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat|SFX")
+    TObjectPtr<UNiagaraSystem> BloodImpactEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat|Audio")
+	TObjectPtr<USoundBase> DeathSound;
 
 	virtual void InitializeAbilityActorInfo();
 

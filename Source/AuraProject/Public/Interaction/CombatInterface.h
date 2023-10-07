@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "NiagaraSystem.h"
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
@@ -17,6 +18,15 @@ struct FTaggedMontage
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag MontageTag;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UNiagaraSystem* HitImpactNiagaraEffect = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	USoundBase* HitImpactSoundEffect = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag SocketTag;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName SkeletalComponentName;
@@ -62,9 +72,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	TArray<FTaggedMontage> GetTaggedMontageData();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	UNiagaraSystem* GetBloodImpactEffect();
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	bool IsDead();
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, meta=(ExpandBoolAsExecs="ReturnValue"))
+	bool TryGetTaggedMontageByTag(const FGameplayTag& MontageTag, FTaggedMontage& OutTaggedMontage);
 
 	virtual void Die() = 0;
 
