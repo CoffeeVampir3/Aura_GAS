@@ -69,13 +69,13 @@ void AAuraEnemy::BroadcastInitialAttributeValues()
 	OnHealthChanged(AttributeSet->GetHealth());
 }
 
-void AAuraEnemy::Die()
+void AAuraEnemy::Die(UAbilitySystemComponent* KillerAbilitySystem)
 {
 	if(HasAuthority() && BaseAiController && BaseAiController->GetBlackboardComponent())
-	{
-		BaseAiController->GetBlackboardComponent()->SetValueAsBool(BT_IsDead, true);
-	}
-	Super::Die();
+    {
+    	BaseAiController->GetBlackboardComponent()->SetValueAsBool(BT_IsDead, true);
+    }
+	Super::Die(KillerAbilitySystem);
 }
 
 void AAuraEnemy::BeginPlay()

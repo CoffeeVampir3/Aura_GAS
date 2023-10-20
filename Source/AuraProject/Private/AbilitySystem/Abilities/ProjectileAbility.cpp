@@ -45,13 +45,8 @@ void UProjectileAbility::SpawnProjectile(const FVector& TargetLocation, const FG
 	
 	const auto SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
 
-	for (const auto& DamageType : DamageMap)
-	{
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			SpecHandle,
-			DamageType.Key,
-			DamageType.Value.GetValueAtLevel(GetAbilityLevel()));
-	}
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,
+		DamageTypeTag, Damage.GetValueAtLevel(GetAbilityLevel()));
 	
 	SpawnedActor->DamageEffectSpecHandle = SpecHandle;
 	SpawnedActor->SourceAvatar = AvatarActor;

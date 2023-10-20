@@ -42,7 +42,7 @@ struct GameDamageStatics
 	}
 };
 
-static const GameDamageStatics DamageStatics()
+static GameDamageStatics DamageStatics()
 {
 	static GameDamageStatics DamageStatic;
 	return DamageStatic;
@@ -83,10 +83,10 @@ void UDamageExecCalc::Execute_Implementation(const FGameplayEffectCustomExecutio
 {
 	const auto Spec = ExecutionParams.GetOwningSpec();
 	const auto SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
-	const auto TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
+	//const auto TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
-	const auto SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
-	const auto TargetAvatar = TargetASC ? SourceASC->GetAvatarActor() : nullptr;
+	//const auto SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
+	//const auto TargetAvatar = TargetASC ? SourceASC->GetAvatarActor() : nullptr;
 
 	FAggregatorEvaluateParameters EvaluationParameters;
 	EvaluationParameters.SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();

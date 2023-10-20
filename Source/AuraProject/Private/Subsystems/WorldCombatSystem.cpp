@@ -8,6 +8,23 @@
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/Data/GameAbilityInfoData.h"
 
+bool UWorldCombatSystem::AbilityMeetsLevelReq(const FGameplayAbilitySpec* Spec, const int CurrentLevel) const
+{
+	for(auto Info : GameAbilityInfo->AbilityInformation)
+	{
+		if(Info.Ability == Spec->Ability.GetClass())
+		{
+			return CurrentLevel >= Info.LevelRequirement;
+		}
+	}
+	return false;
+}
+
+TArray<FGameAbilityInfo> UWorldCombatSystem::GetGameAbilityInfo() const
+{
+	return GameAbilityInfo->AbilityInformation;
+}
+
 bool UWorldCombatSystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
@@ -32,6 +49,11 @@ void UWorldCombatSystem::Initialize(FSubsystemCollectionBase& Collection)
     CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Fire, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistanceFire);
     CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Arcane, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistanceArcane);
     CombatDamageResistanceMap.Add(TAGS::DAMAGE::TYPE::Lightning, TAGS::ATTRIBUTES::SECONDARY::RESISTANCE::ResistanceLightning);
+
+	CombatDamageBuffMap.Add(TAGS::DAMAGE::TYPE::Physical, TAGS::BUFF::Bleeding);
+	CombatDamageBuffMap.Add(TAGS::DAMAGE::TYPE::Fire, TAGS::BUFF::Burning);
+	CombatDamageBuffMap.Add(TAGS::DAMAGE::TYPE::Arcane, TAGS::BUFF::Arcane);
+	CombatDamageBuffMap.Add(TAGS::DAMAGE::TYPE::Lightning, TAGS::BUFF::Stun);
 }
 
 bool UWorldCombatSystem::TryGetTagInfo(const FGameplayTag& AttributeTag, FGameplayAttributeInfo& OutAttributeInfo)
@@ -61,13 +83,13 @@ bool UWorldCombatSystem::TryGetTagInfoFromAttribute(const FGameplayAttribute& At
 	return true;
 }
 
-bool UWorldCombatSystem::TryGetAbilityInfoFromTag(const FGameplayTag& AbilityTag, FGameAbilityInfo& OutAttributeInfo)
+bool UWorldCombatSystem::TryGetAbilityInfoFromTag(const FGameplayTag& AbilityTag, FGameAbilityInfo& OutAbilityInfo)
 {
 	for(auto Info : GameAbilityInfo->AbilityInformation)
 	{
-		if(Info.AbilityTag == AbilityTag)
+		if(Info.AbilityTag.MatchesTagExact(AbilityTag))
 		{
-			OutAttributeInfo = Info;
+			OutAbilityInfo = Info;
 			return true;
 		}
 	}
@@ -90,7 +112,12 @@ TMap<FGameplayTag, FGameplayTag> UWorldCombatSystem::GetCombatDamageResistanceMa
 	return CombatDamageResistanceMap;
 }
 
+FGameplayTag UWorldCombatSystem::GetDebuffTagFromDamageType(FGameplayTag DamageTypeTag)
+{
+	return *CombatDamageBuffMap.Find(DamageTypeTag);
+}
+
 FGameplayTag UWorldCombatSystem::GetDamageResistanceTag(const FGameplayTag DamageTag)
 {
-	return *GetCombatDamageResistanceMap().Find(DamageTag);
+	return *CombatDamageResistanceMap.Find(DamageTag);
 }

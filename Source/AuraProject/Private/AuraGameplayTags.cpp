@@ -7,6 +7,17 @@
 namespace TAGS::DATA {
  UE_DEFINE_GAMEPLAY_TAG(Data, "Data")
  UE_DEFINE_GAMEPLAY_TAG(Level, "Data.Level")
+ UE_DEFINE_GAMEPLAY_TAG(AttributePoints, "Data.AttributePoints")
+ UE_DEFINE_GAMEPLAY_TAG(SpellPoints, "Data.SpellPoints")
+}
+
+namespace TAGS::DATA::DEBUFF
+{
+ UE_DEFINE_GAMEPLAY_TAG(Debuff, "Data.Debuff")
+ UE_DEFINE_GAMEPLAY_TAG(Duration, "Data.Debuff.Duration")
+ UE_DEFINE_GAMEPLAY_TAG(Chance, "Data.Debuff.Chance")
+ UE_DEFINE_GAMEPLAY_TAG(Frequency, "Data.Debuff.Frequency")
+ UE_DEFINE_GAMEPLAY_TAG(Damage, "Data.Debuff.Damage")
 }
 
 namespace TAGS::STATUS
@@ -20,6 +31,23 @@ namespace TAGS::TEAM
  UE_DEFINE_GAMEPLAY_TAG(Team, "Team")
  UE_DEFINE_GAMEPLAY_TAG(Player, "Team.Player")
  UE_DEFINE_GAMEPLAY_TAG(Enemy, "Team.Enemy")
+}
+
+namespace TAGS::ABILITIES::EQUIP::STATE
+{
+ UE_DEFINE_GAMEPLAY_TAG(State, "Abilities.Equip.State")
+ UE_DEFINE_GAMEPLAY_TAG(Eligible, "Abilities.Equip.State.Eligible")
+ UE_DEFINE_GAMEPLAY_TAG(Unlocked, "Abilities.Equip.State.Unlocked")
+ UE_DEFINE_GAMEPLAY_TAG(Locked, "Abilities.Equip.State.Locked")
+ UE_DEFINE_GAMEPLAY_TAG(Equipped, "Abilities.Equip.State.Equipped")
+}
+
+namespace TAGS::ABILITIES::EQUIP::Type
+{
+ UE_DEFINE_GAMEPLAY_TAG(Type, "Abilities.Equip.Type")
+ UE_DEFINE_GAMEPLAY_TAG(Offensive, "Abilities.Equip.Type.Offensive")
+ UE_DEFINE_GAMEPLAY_TAG(Passive, "Abilities.Equip.Type.Passive")
+ UE_DEFINE_GAMEPLAY_TAG(None, "Abilities.Equip.Type.None")
 }
 
 namespace TAGS::ABILITIES::COMBAT
@@ -37,15 +65,26 @@ namespace TAGS::COOLDOWN
   UE_DEFINE_GAMEPLAY_TAG(Fire, "Cooldown.Fire")
   UE_DEFINE_GAMEPLAY_TAG(Firebolt, "Cooldown.Fire.Firebolt")
  }
+ namespace LIGHTNING
+ {
+  UE_DEFINE_GAMEPLAY_TAG(Lightning, "Cooldown.Lightning")
+  UE_DEFINE_GAMEPLAY_TAG(Electrocute, "Cooldown.Lightning.Electrocute")
+ }
 }
 
 namespace TAGS::ABILITYIDS
 {
  UE_DEFINE_GAMEPLAY_TAG(AbilityIds, "AbilityIds")
+ UE_DEFINE_GAMEPLAY_TAG(LevelUp, "AbilityIds.LevelUp")
  namespace FIRE
  {
   UE_DEFINE_GAMEPLAY_TAG(Fire, "AbilityIds.Fire")
   UE_DEFINE_GAMEPLAY_TAG(Firebolt, "AbilityIds.Fire.Firebolt")
+ }
+ namespace LIGHTNING
+ {
+  UE_DEFINE_GAMEPLAY_TAG(Lightning, "AbilityIds.Lightning")
+  UE_DEFINE_GAMEPLAY_TAG(Electrocute, "AbilityIds.Lightning.Electrocute")
  }
 }
 
@@ -75,6 +114,15 @@ namespace TAGS::DAMAGE::TYPE
  UE_DEFINE_GAMEPLAY_TAG(Lightning, "Damage.Type.Lightning")
 }
 
+namespace TAGS::BUFF
+{
+ UE_DEFINE_GAMEPLAY_TAG(Buff, "Buff")
+ UE_DEFINE_GAMEPLAY_TAG(Burning, "Buff.Burning")
+ UE_DEFINE_GAMEPLAY_TAG(Stun, "Buff.Stun")
+ UE_DEFINE_GAMEPLAY_TAG(Arcane, "Buff.Arcane")
+ UE_DEFINE_GAMEPLAY_TAG(Bleeding, "Buff.Bleeding")
+}
+
 namespace TAGS::AnimationStatus {
  UE_DEFINE_GAMEPLAY_TAG(AnimationStatus, "AnimationStatus")
  UE_DEFINE_GAMEPLAY_TAG_COMMENT(AnimationHitReact, "AnimationStatus.HitReact", "Paused during a hit-react animation")
@@ -96,6 +144,15 @@ namespace TAGS::INPUT
 namespace TAGS::ATTRIBUTES
 {
  UE_DEFINE_GAMEPLAY_TAG(Attribute, "Attributes")
+ namespace GROWTH
+ {
+  UE_DEFINE_GAMEPLAY_TAG(Growth, "Attributes.Growth")
+  UE_DEFINE_GAMEPLAY_TAG(Level, "Attributes.Growth.Level")
+  UE_DEFINE_GAMEPLAY_TAG(Experience, "Attributes.Growth.Experience")
+  UE_DEFINE_GAMEPLAY_TAG(AttributePoints, "Attributes.Growth.AttributePoints")
+  UE_DEFINE_GAMEPLAY_TAG(SpellPoints, "Attributes.Growth.SpellPoints")
+ }
+ 
  namespace PRIMARY
  {
   UE_DEFINE_GAMEPLAY_TAG(Primary, "Attributes.Primary")

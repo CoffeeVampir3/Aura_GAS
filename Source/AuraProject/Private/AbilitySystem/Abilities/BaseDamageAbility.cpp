@@ -23,13 +23,30 @@ void UBaseDamageAbility::CauseDamage(AActor* AttackTarget, const bool FriendlyFi
 
 	const FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffectClass, 1.f);
 
-	for(const auto& DamageTypePair : DamageMap)
-	{
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle,
-			DamageTypePair.Key, DamageTypePair.Value.GetValueAtLevel(GetAbilityLevel()));
-	}
-	
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle,
+	DamageTypeTag, Damage.GetValueAtLevel(GetAbilityLevel()));
 
 	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(
 		*DamageSpecHandle.Data.Get(), TargetASC);
+}
+
+FDamageEffectParams UBaseDamageAbility::MakeDamageEffectParamsFromDefaults(AActor* TargetActor) const
+{
+	FDamageEffectParams Params;
+
+	Params.WorldContextObject = GetAvatarActorFromActorInfo();
+	Params.SourceAbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
+	Params.TargetAbilitySystemComponent = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(TargetActor);
+
+	Params.DamageGameplayEffectClass = DamageEffectClass;
+	Params.BaseDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+	Params.AbilityLevel = GetAbilityLevel();
+	Params.DamageType = DamageTypeTag;
+
+	Params.DebuffChance = DebuffChance;
+	Params.DebuffDamage = DebuffDamage;
+	Params.DebuffDuration = DebuffDuration;
+	Params.DebuffFrequency = DebuffFrequency;
+
+	return Params;
 }

@@ -3,13 +3,17 @@
 
 #include "Character/AuraCharacterBase.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTags.h"
 #include "MotionWarpingComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/PlayerLevelUpData.h"
 #include "AuraProject/AuraProject.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Logging/StructuredLog.h"
 
 
 AAuraCharacterBase::AAuraCharacterBase()
@@ -83,30 +87,69 @@ bool AAuraCharacterBase::TryGetTaggedMontageByTag_Implementation(const FGameplay
 	return false;
 }
 
-void AAuraCharacterBase::Die()
+void AAuraCharacterBase::OnGainedExperience(float NewExperience, float CurrentLevel)
 {
-    Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
-	MulticastHandleDeath();
+	check(LevelUpDataInfo);
+	check(LevelUpEffect);
+
+	//An important note is that this does not race the client because everything here is done on the server.
+	int ActualLevel = LevelUpDataInfo->CalculateCurrentLevelFromXP(NewExperience);
+	int LevelDelta = LevelUpDataInfo->GetLevelDeltaFromXP(NewExperience, CurrentLevel);
+
+	int UnitLevel = FMath::FloorToInt(CurrentLevel);
+	
+	if(LevelDelta <= 0) return;
+	
+	LevelUpLocal(ActualLevel, LevelDelta);
 }
 
-void AAuraCharacterBase::MulticastHandleDeath_Implementation()
+bool AAuraCharacterBase::TrySpendSpellPoints_Implementation(int NumPoints)
+{
+	if(NumPoints > FMath::FloorToInt(AttributeSet->GetSpellPoints()))
+	{
+		return false;
+	}
+	
+	auto EffectContext = AbilitySystemComponent->MakeEffectContext();
+	EffectContext.AddSourceObject(AbilitySystemComponent->GetAvatarActor());
+	const auto GrowthEffectSpec = AbilitySystemComponent->MakeOutgoingSpec(ChangeAbilityPointsEffect, GetUnitLevel_Implementation(), EffectContext);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(GrowthEffectSpec, TAGS::DATA::SpellPoints, static_cast<float>(-NumPoints));
+	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*GrowthEffectSpec.Data.Get());
+
+	return true;
+}
+
+void AAuraCharacterBase::Die(UAbilitySystemComponent* KillerAbilitySystem)
+{
+	// Detach From Component is Replicated already
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	
+	auto EffectContext = AbilitySystemComponent->MakeEffectContext();
+	EffectContext.AddSourceObject(AbilitySystemComponent->GetAvatarActor());
+	const auto GrowthEffectSpec = AbilitySystemComponent->MakeOutgoingSpec(ApplyExperienceToTargetEffect, GetUnitLevel_Implementation(), EffectContext);
+	AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*GrowthEffectSpec.Data.Get(), KillerAbilitySystem);
+
+	MulticastHandleDeath(FVector::UpVector * 500.f);
+}
+
+void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& DeathImpulse)
 {
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
-	
-	Weapon->SetSimulatePhysics(true);
-	Weapon->SetEnableGravity(true);
-	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+    
+    Weapon->SetSimulatePhysics(true);
+    Weapon->SetEnableGravity(true);
+    Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 
-	GetMesh()->SetSimulatePhysics(true);
-	GetMesh()->SetEnableGravity(true);
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+    GetMesh()->SetSimulatePhysics(true);
+    GetMesh()->SetEnableGravity(true);
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+    GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	AbilitySystemComponent->AddLooseGameplayTag(TAGS::STATUS::Dead);
+    AbilitySystemComponent->AddLooseGameplayTag(TAGS::STATUS::Dead);
 
-	Dissolve();
+    Dissolve();
 }
 
 void AAuraCharacterBase::BeginPlay()
@@ -131,6 +174,25 @@ inline UMaterialInstanceDynamic* ApplyDissolveMaterial(UMaterialInstance* Mat, U
 	const auto DynamicMatInst = UMaterialInstanceDynamic::Create(Mat, Outer);
 	Target->SetMaterial(0, DynamicMatInst);
 	return DynamicMatInst;
+}
+
+void AAuraCharacterBase::MulticastOnLevelUp_Implementation()
+{
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, LevelUpSFX, GetActorLocation());
+}
+
+void AAuraCharacterBase::LevelUpLocal(const int NewLevel, const int LevelDelta)
+{
+	const auto Context = AbilitySystemComponent->MakeEffectContext();
+	const FGameplayEffectSpecHandle LevelUpHandle = AbilitySystemComponent->MakeOutgoingSpec(LevelUpEffect, 1.f, Context);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(LevelUpHandle, TAGS::DATA::AttributePoints, 1.0f);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(LevelUpHandle, TAGS::DATA::SpellPoints, 1.0f);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(LevelUpHandle, TAGS::DATA::Level, LevelDelta);
+	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*LevelUpHandle.Data.Get());
+
+	AbilitySystemComponent->OnOwnerLevelUp(NewLevel);
+
+	MulticastOnLevelUp();
 }
 
 void AAuraCharacterBase::Dissolve()

@@ -61,6 +61,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Meta Attribute")
 	FGameplayAttributeData MetaIncomingDamage;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MetaIncomingDamage);
+	
+	UPROPERTY(BlueprintReadOnly, Category="Meta Attribute")
+	FGameplayAttributeData MetaIncomingExperience;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MetaIncomingExperience);
 
 	/*
 	 *	Growth
@@ -88,6 +92,27 @@ public:
 	}
 #pragma endregion
 
+#pragma region AttributePoints Attribute
+	UPROPERTY(BlueprintReadOnly, Category="Growth Attribute|Attribute", ReplicatedUsing = OnRep_AttributePoints)
+	FGameplayAttributeData AttributePoints;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, AttributePoints)
+	UFUNCTION()
+	virtual void OnRep_AttributePoints(const FGameplayAttributeData& OldValue)
+	{
+		GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, AttributePoints, OldValue);
+	}
+#pragma endregion
+
+#pragma region SpellPoints Attribute
+	UPROPERTY(BlueprintReadOnly, Category="Growth Attribute|Attribute", ReplicatedUsing = OnRep_SpellPoints)
+	FGameplayAttributeData SpellPoints;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, SpellPoints)
+	UFUNCTION()
+	virtual void OnRep_SpellPoints(const FGameplayAttributeData& OldValue)
+	{
+		GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, SpellPoints, OldValue);
+	}
+#pragma endregion
 
 	/*
 	 *

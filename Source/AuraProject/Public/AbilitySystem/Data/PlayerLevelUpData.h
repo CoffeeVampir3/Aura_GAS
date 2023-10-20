@@ -1,6 +1,8 @@
 #pragma once
-
 #include "PlayerLevelUpData.generated.h"
+
+class UGameplayEffect;
+class UAbilitySystemComponent;
 
 USTRUCT(BlueprintType)
 struct FPlayerLevelData
@@ -17,19 +19,19 @@ struct FPlayerLevelData
 	int32 RewardedSpellPoints = 1;
 };
 
-UCLASS()
+UCLASS(BlueprintType)
 class AURAPROJECT_API UPlayerLevelUpData : public UDataAsset
 {
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable)
-	int GetCurrentLevelFromXp(float CurrentExperience);
-	
+	int CalculateCurrentLevelFromXP(float CurrentExperience);
+
 	UFUNCTION(BlueprintCallable)
-	bool HasMetLevelRequirementsForNextLevel(float CurrentExperience, float CurrentLevel);
-	
+	float GetPercentToNextLevelFromXP(float CurrentExperience);
+
 	UFUNCTION(BlueprintCallable)
-	int LevelUpBy(float CurrentExperience, float CurrentLevel);
+	int GetLevelDeltaFromXP(float CurrentExperience, float CurrentLevel);
 	
 	UPROPERTY(EditAnywhere)
 	TArray<FPlayerLevelData> LevelRequirements;

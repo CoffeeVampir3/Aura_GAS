@@ -23,6 +23,8 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Level, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Experience, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, AttributePoints, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, SpellPoints, COND_None, REPNOTIFY_Always);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Mana, COND_None, REPNOTIFY_Always);
@@ -94,6 +96,22 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		return;
 	}
 
+	if (Data.EvaluatedData.Attribute == GetMetaIncomingExperienceAttribute())
+	{
+		const float LocalIncomingExperience = GetMetaIncomingExperience();
+		SetMetaIncomingExperience(0.0f);
+
+		const auto NewExperienceValue = GetExperience() + LocalIncomingExperience;
+		if(LocalIncomingExperience != 0.f)
+		{
+			SetExperience(NewExperienceValue);
+		}
+		if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(EffectProperties.TargetAvatarActor))
+		{
+			CombatInterface->OnGainedExperience(NewExperienceValue, GetLevel());
+		}
+	}
+
 	if (Data.EvaluatedData.Attribute == GetMetaIncomingDamageAttribute())
 	{
 		const float LocalIncomingDamage = GetMetaIncomingDamage();
@@ -126,7 +144,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				EffectProperties.TargetASC->TryActivateAbilitiesByTag(HitReactContainer);
 			} else if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(EffectProperties.TargetAvatarActor))
 			{
-				CombatInterface->Die();
+				CombatInterface->Die(EffectProperties.SourceASC);
 			}
 		}
 		return;

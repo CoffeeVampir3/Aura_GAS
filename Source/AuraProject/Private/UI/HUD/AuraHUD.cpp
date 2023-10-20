@@ -3,9 +3,8 @@
 
 #include "UI/HUD/AuraHUD.h"
 
-#include "Subsystems/WidgetControllerSubsystem.h"
+#include "Subsystems/UIControllerSubsystem.h"
 #include "UI/Widget/AuraUserWidget.h"
-#include "UI/WidgetController/OverlayWidgetController.h"
 
 void AAuraHUD::InitOverlay(AAuraPlayerController* PC, AAuraPlayerState* PS, UAuraAbilitySystemComponent* ASC, UAuraAttributeSet* AS)
 {
@@ -13,22 +12,12 @@ void AAuraHUD::InitOverlay(AAuraPlayerController* PC, AAuraPlayerState* PS, UAur
 
 	OverlayWidget = CreateWidget<UAuraUserWidget>(GetWorld(), OverlayWidgetClass.Get());
 	
-	auto WidgetControllerSubsystem = GetWorld()->GetSubsystem<UWidgetControllerSubsystem>();
-	check(WidgetControllerSubsystem);
+	auto UiController = GetWorld()->GetSubsystem<UUIControllerSubsystem>();
+	check(UiController);
 	
-	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
-
-	for(auto ControllerClass : DefaultControllersToConstruct)
-	{
-		UObject* ConstructedController;
-		WidgetControllerSubsystem->ConstructWidgetController(ControllerClass, ConstructedController);
-		check(ConstructedController);
-
-		auto CastController = Cast<UWidgetController>(ConstructedController);
-		CastController->SetWidgetControllerParams(WidgetControllerParams);
-		CastController->BindCallbacks();
-		CastController->BroadcastInitialValues();
-	}
+	const FUiControllerParams WidgetControllerParams(PC, PS, ASC, AS);
+	UiController->SetWidgetControllerParams(WidgetControllerParams);
+	UiController->BindCallbacks();
 	
 	OverlayWidget->AddToViewport();
 }

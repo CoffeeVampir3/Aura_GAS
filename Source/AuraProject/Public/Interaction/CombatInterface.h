@@ -8,6 +8,9 @@
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
+class UAbilitySystemComponent;
+class UAuraAbilitySystemComponent;
+
 USTRUCT(BlueprintType)
 struct FTaggedMontage
 {
@@ -78,11 +81,17 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	bool IsDead();
+
+	UFUNCTION()
+	virtual void OnGainedExperience(float NewExperience, float CurrentLevel);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	bool TrySpendSpellPoints(int NumPoints);
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, meta=(ExpandBoolAsExecs="ReturnValue"))
 	bool TryGetTaggedMontageByTag(const FGameplayTag& MontageTag, FTaggedMontage& OutTaggedMontage);
-
-	virtual void Die() = 0;
+	
+	virtual void Die(UAbilitySystemComponent* KillerAbilitySystem) = 0;
 
 	inline static const FName WarpMotionFacingTargetName = FName("TargetFacing");
 };

@@ -37,7 +37,7 @@ public:
 	void OnMaxHealthChanged(float NewValue);
 	void BroadcastInitialAttributeValues();
 
-	virtual void Die() override;
+	virtual void Die(UAbilitySystemComponent* KillerAbilitySystem) override;
 
 	UPROPERTY(BlueprintReadOnly, Category="Combat|AnimatingStatus")
 	bool bHitReacting = false;
